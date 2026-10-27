@@ -30,6 +30,7 @@ class Submarine24View extends WatchUi.WatchFace {
     private const EVEN_FONT_SIZE_RATIO = 0.072;
     private const ODD_FONT_SIZE_RATIO = 0.042;
     private const LABEL_FONT_SIZE_RATIO = 0.045;
+    private const DATE_FONT_SIZE_RATIO = 0.055;
     // Face names available on the vivoactive6 (see its simulator.json); the first one found is used.
     private const EVEN_FONT_FACES = ["RobotoCondensedBold", "RobotoCondensedRegular", "RobotoRegular"];
     private const SMALL_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular"];
@@ -48,6 +49,7 @@ class Submarine24View extends WatchUi.WatchFace {
     private var _evenFont as Graphics.FontType = Graphics.FONT_TINY;
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
+    private var _dateFont as Graphics.FontType = Graphics.FONT_TINY;
     // Date: weekday, then day and month, in French whatever the watch language is
     // (the names come from resources/strings/date.xml).
     private const DATE_Y = 0.28; // first line, below the center, in radius units
@@ -64,6 +66,7 @@ class Submarine24View extends WatchUi.WatchFace {
         _evenFont = loadFont(dc, EVEN_FONT_FACES, EVEN_FONT_SIZE_RATIO, Graphics.FONT_TINY);
         _oddFont = loadFont(dc, SMALL_FONT_FACES, ODD_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
         _labelFont = loadFont(dc, SMALL_FONT_FACES, LABEL_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
+        _dateFont = loadFont(dc, SMALL_FONT_FACES, DATE_FONT_SIZE_RATIO, Graphics.FONT_TINY);
 
         var days = [Rez.Strings.Day1, Rez.Strings.Day2, Rez.Strings.Day3, Rez.Strings.Day4,
                     Rez.Strings.Day5, Rez.Strings.Day6, Rez.Strings.Day7];
@@ -306,9 +309,9 @@ class Submarine24View extends WatchUi.WatchFace {
         var y = (cy + radius * DATE_Y).toNumber();
 
         dc.setColor(NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, y, _labelFont, weekday,
+        dc.drawText(cx, y, _dateFont, weekday,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-        dc.drawText(cx, y + dc.getFontHeight(_labelFont), _labelFont, dayAndMonth,
+        dc.drawText(cx, y + dc.getFontHeight(_dateFont), _dateFont, dayAndMonth,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
