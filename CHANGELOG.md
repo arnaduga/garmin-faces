@@ -12,3 +12,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Devcontainer with Java and the Connect IQ SDK manager CLI.
 - Scripts to install the SDK and device files (`scripts/setup-sdk.sh`) and to build a face (`scripts/build.sh`).
 - Documentation skeleton following the Diátaxis framework.
+- `simple-time` watch face: HH:MM and date on a black background (`src/simple-time`).

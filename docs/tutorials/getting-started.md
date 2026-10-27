@@ -23,7 +23,7 @@ In this tutorial you set up the environment and compile a face for the Vivoactiv
    export PATH="$(connect-iq-sdk-manager sdk current-path --bin):$PATH"
    monkeyc --version
    ```
-4. Create your first face under `src/<face-name>/` (use the VS Code command **Monkey C: New Project**, choose *Watch Face*).
+4. A first face, `simple-time`, is already in `src/simple-time/`. To start another one, copy it and give the copy a new app `id` in its `manifest.xml`.
 5. Build it:
 
    ```bash
