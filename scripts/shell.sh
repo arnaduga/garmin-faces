@@ -12,6 +12,7 @@ TTY=()
 [ -t 0 ] && TTY=(-it)
 
 exec docker run --rm "${TTY[@]}" \
+  -p 6080:6080 \
   -v "$PWD":/workspace -w /workspace \
   -v garmin-faces-sdk:/home/vscode/.Garmin \
   -v garmin-faces-sdk-manager:/home/vscode/.connect-iq-sdk-manager \
