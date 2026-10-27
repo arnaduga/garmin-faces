@@ -12,7 +12,7 @@ Inspired by Russian submarine watches.
 - Midnight (24) is at the top, noon (12) at the bottom.
 - Even hours are large white numerals; odd hours are small, dark grey, each marked by a thick orange tick on the minute track.
 - The red seconds hand is only drawn in high-power mode (not while the display is dimmed).
-- Battery: a ring on the outer edge (green, orange below 30 %, red below 15 %) filling clockwise from the 1 h position (0 %) to the 23 h position (100 %), with rounded ends; the remaining charge is shown at the top, preceded by a lightning bolt.
+- Battery: a small gauge ring (like the steps one) toward hour 5 of the 24 h dial (75° clockwise from the top), with the percentage in the middle and a lightning bolt in its gap. The arc is green by default, orange and red below the configured thresholds.
 - Steps: a small blue ring above the center (steps / daily goal), running clockwise from 335° to 285° (degrees clockwise from the top), with the step count in the middle and a footprint icon in its gap. Tunable through the `STEPS_*` constants in `Submarine24View.mc`.
 - Date: weekday, then day and month in full (no year), on two lines under the center. French by default, or English (setting). The names are in `resources/strings/date.xml`, not taken from the watch language.
 - Fonts: the numerals and small texts use vector fonts (`RobotoCondensedBold` for even hours, `RobotoCondensedRegular` for the rest, sizes relative to the screen width), with a built-in font as fallback. The face names available on a device are listed in its `simulator.json`, in the SDK folder (`Devices/<device>/`).
@@ -33,7 +33,6 @@ Inspired by Russian submarine watches.
 | Midnight (24) at the top | on/off | on |
 | Date language | French / English | French |
 
-The battery ring and its label always stay at the top: with midnight at the bottom, the ring no longer lines up with the 1 h and 23 h marks.
 The settings screen is in English. Values are read by `Config` (`source/Config.mc`).
 
 ### Hand styles (Submarine 24h)
@@ -56,5 +55,5 @@ The `Hand style` setting applies to both the hour and the minute hand.
 
 ### Day/night ring (Submarine 24h)
 
-The outermost ring shows the day (sunrise to sunset, in the day color) against the night (night color) on the 24 h scale. Sun times come from `Weather.getSunrise`/`getSunset` at the last known position (the `Positioning` permission), remembered in storage; they are recomputed once a day. Without any known position the ring is only the night color. When it is shown, the rest of the dial is drawn 5 % smaller.
+The outermost ring shows the day (sunrise to sunset, in the day color) against the night (night color) on the 24 h scale. Sun times come from `Weather.getSunrise`/`getSunset` at the last known position (the `Positioning` permission), remembered in storage; they are recomputed once a day. Without any known position the ring is only the night color.
 

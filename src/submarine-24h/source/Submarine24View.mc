@@ -18,37 +18,31 @@ class Submarine24View extends WatchUi.WatchFace {
     private const NUMERAL_COLOR = 0xDDDDDD;
     private const ODD_NUMERAL_COLOR = 0x777777;
 
-    // Battery ring: sits on the outer edge, with a gap at the top for the label.
-    private const RING_RADIUS = 0.965;
-    private const RING_WIDTH = 8;
-    private const RING_GAP_DEG = 15; // the ring spans 1 h (15°) to 23 h (345°)
-    // Label distance from the center: inside the ring so the text is not clipped by the screen edge.
-    private const LABEL_RADIUS = 0.91;
-
     // Small texts use a vector font (size relative to the screen width) so they can be
     // smaller than the built-in fonts; a built-in font is the fallback.
     private const EVEN_FONT_SIZE_RATIO = 0.072;
     private const ODD_FONT_SIZE_RATIO = 0.042;
-    private const LABEL_FONT_SIZE_RATIO = 0.045;
     private const DATE_FONT_SIZE_RATIO = 0.055;
     // Face names available on the vivoactive6 (see its simulator.json); the first one found is used.
     private const EVEN_FONT_FACES = ["RobotoCondensedBold", "RobotoCondensedRegular", "RobotoRegular"];
     private const SMALL_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular"];
 
-    // Steps gauge: small ring above the center, with a footprint icon in its gap.
-    // Angles are in degrees clockwise from the top (0° = 12 o'clock); the ring runs
-    // clockwise from STEPS_RING_START to STEPS_RING_END, leaving a gap for the icon.
-    private const STEPS_RING_START = 335;
-    private const STEPS_RING_END = 285;
-    private const STEPS_RING_ANGLE = 0.0; // position on the dial, clockwise from the top
-    private const STEPS_RING_DISTANCE = 0.37; // from the center, in radius units
-    private const STEPS_RING_RADIUS = 0.19;
-    private const STEPS_RING_WIDTH = 7;
+    // Gauges (steps, battery): small rings with a gap holding an icon, the value in the middle.
+    // Angles are in degrees clockwise from the top (0° = 12 o'clock); a ring runs clockwise
+    // from GAUGE_START to GAUGE_END, leaving a gap for the icon. Radii are in units of the dial radius.
+    private const GAUGE_START = 335;
+    private const GAUGE_END = 285;
+    private const GAUGE_RADIUS = 0.19;
+    private const GAUGE_WIDTH = 7;
+    private const STEPS_ANGLE = 0.0;      // above the center
+    private const STEPS_DISTANCE = 0.37;
+    private const BATTERY_ANGLE = 75.0;   // where hour 5 is on the 24h dial (0 h at the top)
+    private const BATTERY_DISTANCE = 0.44;
+    private const ICON_STEPS = 0;
+    private const ICON_BATTERY = 1;
 
     // Day/night ring: the outermost ring, from sunrise to sunset on the 24 h scale.
-    // When it is shown, the rest of the dial is shrunk by DAY_NIGHT_INSET to make room.
     private const DAY_NIGHT_WIDTH = 6;
-    private const DAY_NIGHT_INSET = 0.95;
     private const SUN_RETRY_SECONDS = 1800; // retry this often while the location is unknown
 
     // Hand styles (values of the HandStyle setting; 0 = classic).
@@ -65,7 +59,6 @@ class Submarine24View extends WatchUi.WatchFace {
 
     private var _evenFont as Graphics.FontType = Graphics.FONT_TINY;
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
-    private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _dateFont as Graphics.FontType = Graphics.FONT_TINY;
     // Date: weekday, then day and month, in French or English (user setting, independent of
     // the watch language); the names come from resources/strings/date.xml.
@@ -97,7 +90,6 @@ class Submarine24View extends WatchUi.WatchFace {
     function onLayout(dc as Dc) as Void {
         _evenFont = loadFont(dc, EVEN_FONT_FACES, EVEN_FONT_SIZE_RATIO, Graphics.FONT_TINY);
         _oddFont = loadFont(dc, SMALL_FONT_FACES, ODD_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
-        _labelFont = loadFont(dc, SMALL_FONT_FACES, LABEL_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
         _dateFont = loadFont(dc, SMALL_FONT_FACES, DATE_FONT_SIZE_RATIO, Graphics.FONT_TINY);
 
         loadDateNames();
@@ -158,8 +150,7 @@ class Submarine24View extends WatchUi.WatchFace {
     function onUpdate(dc as Dc) as Void {
         var cx = dc.getWidth() / 2;
         var cy = dc.getHeight() / 2;
-        // The dial is drawn within `radius`; the day/night ring takes the space left at the edge.
-        var radius = _config.showDayNight ? (cx * DAY_NIGHT_INSET).toNumber() : cx;
+        var radius = cx;
 
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.clear();
@@ -300,10 +291,6 @@ class Submarine24View extends WatchUi.WatchFace {
     private function drawMinuteTrack(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         for (var m = 0; m < 60; m++) {
-            var degrees = m * 6;
-            if (_config.showBattery && (degrees <= RING_GAP_DEG || degrees >= 360 - RING_GAP_DEG)) {
-                continue;
-            }
             var angle = m / 60.0 * 2 * Math.PI;
             var inner = (m % 5 == 0) ? radius * 0.88 : radius * 0.91;
             var from = polar(cx, cy, angle, inner);
@@ -342,48 +329,14 @@ class Submarine24View extends WatchUi.WatchFace {
 
     private function drawBattery(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
         var level = System.getSystemStats().battery;
-        var ringRadius = radius * RING_RADIUS;
-        // The rounded caps stick out by half the ring width: inset the arc by that angle
-        // so the bar visually spans exactly from the 1 h to the 23 h position.
-        var capDeg = (RING_WIDTH / 2.0) / ringRadius * 180.0 / Math.PI;
-        var from = RING_GAP_DEG + capDeg; // degrees clockwise from the top
-        var span = (360 - 2 * from) * level / 100.0;
-        // Dc.drawArc angles: 0° is 3 o'clock and they grow counter-clockwise.
-        var arcStart = (90 - from + 0.5).toNumber();
-        var arcEnd = (90 + from + 0.5).toNumber();
-
-        dc.setPenWidth(RING_WIDTH);
-        dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
-        dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, arcStart, arcEnd);
-        drawRoundCap(dc, cx, cy, ringRadius, from);
-        drawRoundCap(dc, cx, cy, ringRadius, 360 - from);
-        if (span >= 1) {
-            var color = _config.batteryColor;
-            if (level < _config.batteryRedBelow) {
-                color = Graphics.COLOR_RED;
-            } else if (level < _config.batteryOrangeBelow) {
-                color = Graphics.COLOR_ORANGE;
-            }
-            dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-            dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, arcStart,
-                (arcStart - span + 360 + 0.5).toNumber() % 360);
-            drawRoundCap(dc, cx, cy, ringRadius, from);
-            drawRoundCap(dc, cx, cy, ringRadius, from + span);
+        var color = _config.batteryColor;
+        if (level < _config.batteryRedBelow) {
+            color = Graphics.COLOR_RED;
+        } else if (level < _config.batteryOrangeBelow) {
+            color = Graphics.COLOR_ORANGE;
         }
-        dc.setPenWidth(1);
-
-        // Label in the ring gap: lightning bolt + percentage.
-        var text = level.format("%d") + "%";
-        var boltWidth = 10;
-        var spacing = 4;
-        var textWidth = dc.getTextWidthInPixels(text, _labelFont);
-        var left = cx - (boltWidth + spacing + textWidth) / 2;
-        var labelY = (cy - radius * LABEL_RADIUS).toNumber();
-
-        drawBolt(dc, left + boltWidth / 2, labelY);
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(left + boltWidth + spacing, labelY, _labelFont, text,
-            Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+        drawGauge(dc, cx, cy, radius, BATTERY_ANGLE, BATTERY_DISTANCE, level / 100.0, color,
+            level.format("%d") + "%", ICON_BATTERY);
     }
 
     private function drawSteps(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
@@ -391,39 +344,51 @@ class Submarine24View extends WatchUi.WatchFace {
         var steps = (info.steps != null) ? info.steps : 0;
         var goal = (info.stepGoal != null) ? info.stepGoal : 0;
         var ratio = (goal > 0) ? steps.toFloat() / goal : 0.0;
+        drawGauge(dc, cx, cy, radius, STEPS_ANGLE, STEPS_DISTANCE, ratio, _config.stepsColor,
+            steps.toString(), ICON_STEPS);
+    }
+
+    // Small ring placed at `positionDeg` (clockwise from the top) and `distance` from the center:
+    // dark track, `ratio` (0..1) of it filled with `color`, `text` in the middle, icon in the gap.
+    private function drawGauge(dc as Dc, cx as Number, cy as Number, radius as Number,
+                               positionDeg as Float, distance as Float, ratio as Float,
+                               color as Number, text as String, icon as Number) as Void {
         if (ratio > 1.0) {
             ratio = 1.0;
         }
-
-        var center = polar(cx, cy, STEPS_RING_ANGLE * Math.PI / 180.0, radius * STEPS_RING_DISTANCE);
+        var center = polar(cx, cy, positionDeg * Math.PI / 180.0, radius * distance);
         var x = center[0].toNumber();
         var y = center[1].toNumber();
-        var ringRadius = (radius * STEPS_RING_RADIUS).toNumber();
-        var sweep = ((STEPS_RING_END - STEPS_RING_START + 360) % 360) * ratio;
+        var ringRadius = (radius * GAUGE_RADIUS).toNumber();
+        var sweep = ((GAUGE_END - GAUGE_START + 360) % 360) * ratio;
         // Dc.drawArc angles: 0° is 3 o'clock and they grow counter-clockwise.
-        var arcStart = (90 - STEPS_RING_START + 360) % 360;
-        var arcEnd = (90 - STEPS_RING_END + 360) % 360;
+        var arcStart = (90 - GAUGE_START + 360) % 360;
+        var arcEnd = (90 - GAUGE_END + 360) % 360;
 
-        dc.setPenWidth(STEPS_RING_WIDTH);
+        dc.setPenWidth(GAUGE_WIDTH);
         dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
         dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, arcStart, arcEnd);
         if (sweep >= 1) {
-            dc.setColor(_config.stepsColor, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(color, Graphics.COLOR_TRANSPARENT);
             dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, arcStart,
                 (arcStart - sweep + 360).toNumber() % 360);
         }
         dc.setPenWidth(1);
 
-        // Step count in the middle of the ring.
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x, y, _oddFont, steps.toString(),
+        dc.drawText(x, y, _oddFont, text,
             Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
-        // Footprints in the gap of the ring, halfway between its two ends.
-        var gapAngle = (STEPS_RING_START + STEPS_RING_END) / 2.0 * Math.PI / 180.0;
-        dc.setColor(_config.stepsColor, Graphics.COLOR_TRANSPARENT);
-        drawFootprint(dc, x + (ringRadius * Math.sin(gapAngle)).toNumber(),
-            y - (ringRadius * Math.cos(gapAngle)).toNumber());
+        // Icon in the gap of the ring, halfway between its two ends.
+        var gapAngle = (GAUGE_START + GAUGE_END) / 2.0 * Math.PI / 180.0;
+        var iconX = x + (ringRadius * Math.sin(gapAngle)).toNumber();
+        var iconY = y - (ringRadius * Math.cos(gapAngle)).toNumber();
+        if (icon == ICON_STEPS) {
+            dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+            drawFootprint(dc, iconX, iconY);
+        } else {
+            drawBolt(dc, iconX, iconY);
+        }
     }
 
     // Two small shoe prints, centered on (x, y).
@@ -432,13 +397,6 @@ class Submarine24View extends WatchUi.WatchFace {
         dc.fillEllipse(x - 3, y + 4, 1, 1);
         dc.fillEllipse(x + 3, y - 5, 2, 3);
         dc.fillEllipse(x + 3, y, 1, 1);
-    }
-
-    // Disk closing the end of a thick arc, at `degrees` clockwise from the top.
-    private function drawRoundCap(dc as Dc, cx as Number, cy as Number, ringRadius as Float,
-                                  degrees as Float) as Void {
-        var at = polar(cx, cy, degrees * Math.PI / 180.0, ringRadius);
-        dc.fillCircle(at[0], at[1], RING_WIDTH / 2);
     }
 
     // Two lines under the center: weekday, then day and month (no year).
