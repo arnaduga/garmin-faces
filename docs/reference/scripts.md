@@ -14,6 +14,10 @@ Installs the SDK, the device files and a developer key.
 
 Compiles `<project-dir>/monkey.jungle` for `device` (default `vivoactive6`) into `build/<project-name>.prg`.
 
+## `scripts/shell.sh [command...]`
+
+Builds `.devcontainer/Dockerfile` and runs `command` (default `bash`) in it, with the repository mounted at `/workspace` and the same volumes as the devcontainer. Needs only Docker.
+
 ## Devcontainer
 
 | Item | Value |

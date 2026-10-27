@@ -5,7 +5,7 @@ Everything runs in a devcontainer so nothing but Docker is installed on the host
 
 ## Quick start
 
-1. Open the folder in VS Code and choose **Reopen in Container** (or use the `devcontainer` CLI).
+1. Enter the container: **Reopen in Container** in VS Code, or `scripts/shell.sh` from any terminal (VSCodium).
 2. In the container, run `scripts/setup-sdk.sh` (Garmin account required).
 3. Build a face: `scripts/build.sh src/<face-name>`.
 

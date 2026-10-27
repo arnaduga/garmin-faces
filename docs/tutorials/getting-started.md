@@ -4,13 +4,14 @@ In this tutorial you set up the environment and compile a face for the Vivoactiv
 
 ## Prerequisites
 
-- Docker and VS Code with the Dev Containers extension.
+- Docker.
+- VS Code with the Dev Containers extension, **or** any editor (e.g. VSCodium) plus `scripts/shell.sh`.
 - A free Garmin account.
 
 ## Steps
 
-1. Open the repository in VS Code and run **Dev Containers: Reopen in Container**.
-2. In the container terminal, run:
+1. Enter the container: run **Dev Containers: Reopen in Container** in VS Code, or `scripts/shell.sh` from a host terminal (VSCodium users: see [Use VSCodium](../how-to/use-vscodium.md)).
+2. In the container shell, run:
 
    ```bash
    scripts/setup-sdk.sh

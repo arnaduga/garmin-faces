@@ -7,3 +7,7 @@ RUN apt-get update \
 
 RUN curl -fsSL https://raw.githubusercontent.com/lindell/connect-iq-sdk-manager-cli/master/install.sh \
     | BINDIR=/usr/local/bin sh
+
+# Pre-create the volume mount points so Docker initialises them owned by vscode.
+RUN mkdir -p /home/vscode/.Garmin /home/vscode/.connect-iq-sdk-manager \
+    && chown -R vscode:vscode /home/vscode/.Garmin /home/vscode/.connect-iq-sdk-manager
