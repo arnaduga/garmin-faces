@@ -14,4 +14,4 @@ The simulator is a GUI application. The image bundles a virtual display (Xvfb) e
 
 ## x86_64 image
 
-The simulator ships as an x86_64 binary only, so the image is built for `linux/amd64`, even on Apple Silicon where Docker emulates it. Builds and the simulator are slower than native; enabling Rosetta in Docker Desktop (Settings → General → *Use Rosetta for x86_64/amd64 emulation*) helps.
+The simulator ships as an x86_64 binary only, so the image is built for `linux/amd64`, even on Apple Silicon where Docker emulates it. Builds and the simulator are slower than native. Rosetta makes emulation much faster: with Colima, start the VM using `colima start --vm-type vz --vz-rosetta`; with Docker Desktop, enable *Use Rosetta for x86_64/amd64 emulation* in Settings → General.
