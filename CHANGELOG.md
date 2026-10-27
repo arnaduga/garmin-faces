@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `simple-time` watch face: HH:MM and date on a black background (`src/simple-time`).
 - `scripts/shell.sh` to use the dev image without the Dev Containers extension (VSCodium).
 - `scripts/simulate.sh` to run the Connect IQ simulator in the container, viewed through noVNC on port 6080.
-- `submarine-24h` watch face: analog 24-hour dial in the style of Russian submarine watches (`src/submarine-24h`).
+- `submarine-24h` watch face: analog 24-hour dial in the style of Russian submarine watches (`src/submarine-24h`), with a battery ring and percentage on the outer edge.
 
 ### Fixed
 

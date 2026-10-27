@@ -13,6 +13,11 @@ class Submarine24View extends WatchUi.WatchFace {
     private const HAND_COLOR = 0xE8E8E8;
     private const SECONDS_COLOR = Graphics.COLOR_RED;
 
+    // Battery ring: sits on the outer edge, with a gap at the top for the label.
+    private const RING_RADIUS = 0.965;
+    private const RING_WIDTH = 8;
+    private const RING_GAP_DEG = 12;
+
     private var _lowPower as Boolean = false;
 
     function initialize() {
@@ -39,6 +44,7 @@ class Submarine24View extends WatchUi.WatchFace {
 
         drawMinuteTrack(dc, cx, cy, radius);
         drawHourDial(dc, cx, cy, radius);
+        drawBattery(dc, cx, cy, radius);
 
         var clock = System.getClockTime();
         var hours = clock.hour + clock.min / 60.0;
@@ -74,10 +80,14 @@ class Submarine24View extends WatchUi.WatchFace {
     private function drawMinuteTrack(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         for (var m = 0; m < 60; m++) {
+            var degrees = m * 6;
+            if (degrees <= RING_GAP_DEG || degrees >= 360 - RING_GAP_DEG) {
+                continue;
+            }
             var angle = m / 60.0 * 2 * Math.PI;
-            var inner = (m % 5 == 0) ? radius * 0.93 : radius * 0.96;
+            var inner = (m % 5 == 0) ? radius * 0.88 : radius * 0.91;
             var from = polar(cx, cy, angle, inner);
-            var to = polar(cx, cy, angle, radius * 0.99);
+            var to = polar(cx, cy, angle, radius * 0.935);
             dc.setPenWidth((m % 5 == 0) ? 3 : 1);
             dc.drawLine(from[0], from[1], to[0], to[1]);
         }
@@ -90,18 +100,67 @@ class Submarine24View extends WatchUi.WatchFace {
             var angle = hourAngle(h.toFloat());
             if (h == 12) {
                 // Noon: hollow triangle pointing outwards instead of a numeral.
-                drawTriangle(dc, cx, cy, angle, radius * 0.68, radius * 0.8, radius * 0.06, false);
+                drawTriangle(dc, cx, cy, angle, radius * 0.6, radius * 0.74, radius * 0.06, false);
             } else if (h % 2 == 0) {
-                var at = polar(cx, cy, angle, radius * 0.74);
+                var at = polar(cx, cy, angle, radius * 0.7);
                 dc.drawText(at[0], at[1], Graphics.FONT_MEDIUM, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             } else {
                 var at = polar(cx, cy, angle, radius * 0.58);
                 dc.drawText(at[0], at[1], Graphics.FONT_XTINY, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-                drawTriangle(dc, cx, cy, angle, radius * 0.84, radius * 0.9, radius * 0.025, true);
+                drawTriangle(dc, cx, cy, angle, radius * 0.79, radius * 0.85, radius * 0.025, true);
             }
         }
+    }
+
+    private function drawBattery(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
+        var level = System.getSystemStats().battery;
+        var ringRadius = radius * RING_RADIUS;
+        // drawArc: 0° is 3 o'clock, angles grow counter-clockwise; the top is 90°.
+        var start = 90 - RING_GAP_DEG;
+        var span = (360 - 2 * RING_GAP_DEG) * level / 100.0;
+
+        dc.setPenWidth(RING_WIDTH);
+        dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
+        dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, start, 90 + RING_GAP_DEG);
+        if (span >= 1) {
+            var color = Graphics.COLOR_GREEN;
+            if (level < 15) {
+                color = Graphics.COLOR_RED;
+            } else if (level < 30) {
+                color = Graphics.COLOR_ORANGE;
+            }
+            dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+            dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, start, (start - span + 360) % 360);
+        }
+        dc.setPenWidth(1);
+
+        // Label in the ring gap: lightning bolt + percentage.
+        var text = level.format("%d") + "%";
+        var boltWidth = 10;
+        var spacing = 4;
+        var textWidth = dc.getTextWidthInPixels(text, Graphics.FONT_XTINY);
+        var left = cx - (boltWidth + spacing + textWidth) / 2;
+        var labelY = cy - ringRadius;
+
+        drawBolt(dc, left + boltWidth / 2, labelY);
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(left + boltWidth + spacing, labelY, Graphics.FONT_XTINY, text,
+            Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    }
+
+    // Small lightning bolt centered on (x, y).
+    private function drawBolt(dc as Dc, x as Number, y as Number) as Void {
+        dc.setColor(Graphics.COLOR_YELLOW, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([
+            [x + 2, y - 8] as Graphics.Point2D,
+            [x - 5, y + 1] as Graphics.Point2D,
+            [x - 1, y + 1] as Graphics.Point2D,
+            [x - 3, y + 8] as Graphics.Point2D,
+            [x + 5, y - 2] as Graphics.Point2D,
+            [x + 1, y - 2] as Graphics.Point2D
+        ] as Array<Graphics.Point2D>);
     }
 
     // Triangle with its base at `baseDist` and its tip at `tipDist` from the center.
