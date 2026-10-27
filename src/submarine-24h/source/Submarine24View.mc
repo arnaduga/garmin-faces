@@ -26,7 +26,8 @@ class Submarine24View extends WatchUi.WatchFace {
     private const LABEL_RADIUS = 0.91;
 
     // Small texts use a vector font (size relative to the screen width) so they can be
-    // smaller than the smallest built-in font; FONT_XTINY is the fallback.
+    // smaller than the built-in fonts; a built-in font is the fallback.
+    private const EVEN_FONT_SIZE_RATIO = 0.062;
     private const ODD_FONT_SIZE_RATIO = 0.042;
     private const LABEL_FONT_SIZE_RATIO = 0.045;
     private const VECTOR_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular", "BionicRegular"];
@@ -42,6 +43,7 @@ class Submarine24View extends WatchUi.WatchFace {
     private const STEPS_RING_RADIUS = 0.16;
     private const STEPS_RING_WIDTH = 4;
 
+    private var _evenFont as Graphics.FontType = Graphics.FONT_TINY;
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
     // Date: weekday, then day and month, in French whatever the watch language is
@@ -57,8 +59,9 @@ class Submarine24View extends WatchUi.WatchFace {
     }
 
     function onLayout(dc as Dc) as Void {
-        _oddFont = smallFont(dc, ODD_FONT_SIZE_RATIO);
-        _labelFont = smallFont(dc, LABEL_FONT_SIZE_RATIO);
+        _evenFont = smallFont(dc, EVEN_FONT_SIZE_RATIO, Graphics.FONT_TINY);
+        _oddFont = smallFont(dc, ODD_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
+        _labelFont = smallFont(dc, LABEL_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
 
         var days = [Rez.Strings.Day1, Rez.Strings.Day2, Rez.Strings.Day3, Rez.Strings.Day4,
                     Rez.Strings.Day5, Rez.Strings.Day6, Rez.Strings.Day7];
@@ -76,7 +79,7 @@ class Submarine24View extends WatchUi.WatchFace {
         }
     }
 
-    private function smallFont(dc as Dc, sizeRatio as Float) as Graphics.FontType {
+    private function smallFont(dc as Dc, sizeRatio as Float, fallback as Graphics.FontType) as Graphics.FontType {
         if (Graphics has :getVectorFont) {
             var font = Graphics.getVectorFont({
                 :face => VECTOR_FONT_FACES,
@@ -86,7 +89,7 @@ class Submarine24View extends WatchUi.WatchFace {
                 return font;
             }
         }
-        return Graphics.FONT_XTINY;
+        return fallback;
     }
 
     function onEnterSleep() as Void {
@@ -170,7 +173,7 @@ class Submarine24View extends WatchUi.WatchFace {
                 drawTriangle(dc, cx, cy, angle, radius * 0.6, radius * 0.74, radius * 0.06, false);
             } else if (h % 2 == 0) {
                 var at = polar(cx, cy, angle, radius * 0.7);
-                dc.drawText(at[0], at[1], Graphics.FONT_SMALL, h.toString(),
+                dc.drawText(at[0], at[1], _evenFont, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             } else {
                 var at = polar(cx, cy, angle, radius * 0.77);
