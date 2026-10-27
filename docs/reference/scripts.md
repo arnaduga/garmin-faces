@@ -26,7 +26,7 @@ Builds `.devcontainer/Dockerfile` and runs `command` (default `bash`) in it, wit
 
 | Item | Value |
 |---|---|
-| Base image | Ubuntu 24.04 (`devcontainers/base`) |
-| Installed | OpenJDK 17 JRE, `connect-iq-sdk-manager`, Xvfb, x11vnc, noVNC, fluxbox, WebKitGTK |
+| Base image | Ubuntu 22.04 (`devcontainers/base`) |
+| Installed | OpenJDK 17 JRE, `connect-iq-sdk-manager`, Xvfb, x11vnc, noVNC, fluxbox, WebKitGTK 4.0 |
 | Volumes | `garmin-faces-sdk`, `garmin-faces-sdk-manager` (persist SDK and login) |
 | VS Code extension | `garmin.monkey-c` |

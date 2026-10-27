@@ -19,3 +19,7 @@ The simulator ships as an x86_64 binary only, so the image is built for `linux/a
 ## Rosetta is required on Apple Silicon
 
 Under plain QEMU emulation, `python3` (pulled in by noVNC) segfaults during the image build. Use Rosetta: `colima start --vm-type vz --vz-rosetta`, or the equivalent Docker Desktop setting.
+
+## Ubuntu 22.04 base
+
+The Linux simulator links against `libwebkit2gtk-4.0`, which Ubuntu 24.04 no longer ships (it only has 4.1). The image therefore uses Ubuntu 22.04.
