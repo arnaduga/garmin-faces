@@ -19,6 +19,8 @@ class Submarine24View extends WatchUi.WatchFace {
     private const RING_RADIUS = 0.965;
     private const RING_WIDTH = 8;
     private const RING_GAP_DEG = 12;
+    // Label distance from the center: inside the ring so the text is not clipped by the screen edge.
+    private const LABEL_RADIUS = 0.885;
 
     private var _lowPower as Boolean = false;
 
@@ -151,7 +153,7 @@ class Submarine24View extends WatchUi.WatchFace {
         var spacing = 4;
         var textWidth = dc.getTextWidthInPixels(text, Graphics.FONT_XTINY);
         var left = cx - (boltWidth + spacing + textWidth) / 2;
-        var labelY = (cy - ringRadius).toNumber();
+        var labelY = (cy - radius * LABEL_RADIUS).toNumber();
 
         drawBolt(dc, left + boltWidth / 2, labelY);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
