@@ -202,10 +202,7 @@ class Submarine24View extends WatchUi.WatchFace {
         for (var h = 1; h <= 24; h++) {
             dc.setColor(NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
             var angle = hourAngle(h.toFloat());
-            if (h == 12) {
-                // Noon: hollow triangle pointing outwards instead of a numeral.
-                drawTriangle(dc, cx, cy, angle, radius * 0.6, radius * 0.74, radius * 0.06, false);
-            } else if (h % 2 == 0) {
+            if (h % 2 == 0) {
                 var at = polar(cx, cy, angle, radius * 0.7);
                 dc.drawText(at[0], at[1], _evenFont, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
@@ -353,29 +350,6 @@ class Submarine24View extends WatchUi.WatchFace {
             [x + 5, y - 2] as Graphics.Point2D,
             [x + 1, y - 2] as Graphics.Point2D
         ] as Array<Graphics.Point2D>);
-    }
-
-    // Triangle with its base at `baseDist` and its tip at `tipDist` from the center.
-    private function drawTriangle(dc as Dc, cx as Number, cy as Number, angle as Float,
-                                  baseDist as Float, tipDist as Float, halfWidth as Float,
-                                  filled as Boolean) as Void {
-        var base = polar(cx, cy, angle, baseDist);
-        var dx = Math.cos(angle) * halfWidth;
-        var dy = Math.sin(angle) * halfWidth;
-        var points = [
-            [base[0] - dx, base[1] - dy] as Graphics.Point2D,
-            [base[0] + dx, base[1] + dy] as Graphics.Point2D,
-            polar(cx, cy, angle, tipDist)
-        ] as Array<Graphics.Point2D>;
-        if (filled) {
-            dc.fillPolygon(points);
-        } else {
-            dc.setPenWidth(2);
-            dc.drawLine(points[0][0], points[0][1], points[1][0], points[1][1]);
-            dc.drawLine(points[1][0], points[1][1], points[2][0], points[2][1]);
-            dc.drawLine(points[2][0], points[2][1], points[0][0], points[0][1]);
-            dc.setPenWidth(1);
-        }
     }
 
     // Tapered hand: a kite with a short tail behind the center.
