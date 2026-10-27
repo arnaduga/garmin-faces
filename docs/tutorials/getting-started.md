@@ -22,7 +22,7 @@ In this tutorial you set up the environment and compile a face for the Vivoactiv
 
    ```bash
    export PATH="$(connect-iq-sdk-manager sdk current-path --bin):$PATH"
-   monkeyc --version
+   monkeyc -v
    ```
 4. A first face, `simple-time`, is already in `src/simple-time/`. To start another one, copy it and give the copy a new app `id` in its `manifest.xml`.
 5. Build it:
