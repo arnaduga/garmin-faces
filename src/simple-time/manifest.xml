@@ -5,7 +5,9 @@
             <iq:product id="vivoactive6"/>
         </iq:products>
         <iq:permissions/>
-        <iq:languages/>
+        <iq:languages>
+            <iq:language>eng</iq:language>
+        </iq:languages>
         <iq:barrels/>
     </iq:application>
 </iq:manifest>
