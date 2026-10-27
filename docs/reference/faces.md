@@ -15,4 +15,4 @@ Inspired by Russian submarine watches.
 - Battery: a ring on the outer edge (green, orange below 30 %, red below 15 %) filling clockwise from the 1 h position (0 %) to the 23 h position (100 %), with rounded ends; the remaining charge is shown at the top, preceded by a lightning bolt.
 - Steps: a small blue ring at about 2 o'clock (steps / daily goal), running clockwise from 335° to 285° (degrees clockwise from the top), with the step count in the middle and a footprint icon in its gap. Tunable through the `STEPS_*` constants in `Submarine24View.mc`.
 - Date: weekday, then day and month in full (no year), on two lines under the center. Always in French: the names are in `resources/strings/date.xml`, not taken from the watch language.
-
+- Fonts: the numerals and small texts use vector fonts (`RobotoCondensedBold` for even hours, `RobotoCondensedRegular` for the rest, sizes relative to the screen width), with a built-in font as fallback. The face names available on a device are listed in its `simulator.json`, in the SDK folder (`Devices/<device>/`).

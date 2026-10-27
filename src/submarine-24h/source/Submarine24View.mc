@@ -30,7 +30,9 @@ class Submarine24View extends WatchUi.WatchFace {
     private const EVEN_FONT_SIZE_RATIO = 0.072;
     private const ODD_FONT_SIZE_RATIO = 0.042;
     private const LABEL_FONT_SIZE_RATIO = 0.045;
-    private const VECTOR_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular", "BionicRegular"];
+    // Face names available on the vivoactive6 (see its simulator.json); the first one found is used.
+    private const EVEN_FONT_FACES = ["RobotoCondensedBold", "RobotoCondensedRegular", "RobotoRegular"];
+    private const SMALL_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular"];
 
     // Steps gauge: small ring at about 2 o'clock, with a footprint icon in its gap.
     // Angles are in degrees clockwise from the top (0° = 12 o'clock); the ring runs
@@ -59,9 +61,9 @@ class Submarine24View extends WatchUi.WatchFace {
     }
 
     function onLayout(dc as Dc) as Void {
-        _evenFont = smallFont(dc, EVEN_FONT_SIZE_RATIO, Graphics.FONT_TINY);
-        _oddFont = smallFont(dc, ODD_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
-        _labelFont = smallFont(dc, LABEL_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
+        _evenFont = loadFont(dc, EVEN_FONT_FACES, EVEN_FONT_SIZE_RATIO, Graphics.FONT_TINY);
+        _oddFont = loadFont(dc, SMALL_FONT_FACES, ODD_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
+        _labelFont = loadFont(dc, SMALL_FONT_FACES, LABEL_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
 
         var days = [Rez.Strings.Day1, Rez.Strings.Day2, Rez.Strings.Day3, Rez.Strings.Day4,
                     Rez.Strings.Day5, Rez.Strings.Day6, Rez.Strings.Day7];
@@ -79,17 +81,21 @@ class Submarine24View extends WatchUi.WatchFace {
         }
     }
 
-    private function smallFont(dc as Dc, sizeRatio as Float, fallback as Graphics.FontType) as Graphics.FontType {
-        if (Graphics has :getVectorFont) {
+    // Vector font of `sizeRatio` x the screen width, or `fallback` if the device cannot provide it.
+    private function loadFont(dc as Dc, faces as Array<String>, sizeRatio as Float,
+                              fallback as Graphics.FontType) as Graphics.FontType {
+        if (!(Graphics has :getVectorFont)) {
+            return fallback;
+        }
+        try {
             var font = Graphics.getVectorFont({
-                :face => VECTOR_FONT_FACES,
+                :face => faces,
                 :size => (dc.getWidth() * sizeRatio).toNumber()
             });
-            if (font != null) {
-                return font;
-            }
+            return (font != null) ? font : fallback;
+        } catch (ex) {
+            return fallback;
         }
-        return fallback;
     }
 
     function onEnterSleep() as Void {
