@@ -1,6 +1,8 @@
 {
   "name": "garmin-faces",
   "build": { "dockerfile": "Dockerfile" },
+  // The Connect IQ simulator is x86_64 only: emulate it on Apple Silicon.
+  "runArgs": ["--platform=linux/amd64"],
   "remoteUser": "vscode",
   "mounts": [
     // Keep the SDK and downloaded device files across container rebuilds.

@@ -11,3 +11,7 @@ Garmin requires a licence agreement and a login to download the SDK and device f
 ## Simulator in a browser
 
 The simulator is a GUI application. The image bundles a virtual display (Xvfb) exported over VNC and noVNC, so the simulator is viewed in a browser tab at `localhost:6080` and nothing graphical is installed on the host. Real-device testing works through [sideloading](../how-to/sideload-a-face.md).
+
+## x86_64 image
+
+The simulator ships as an x86_64 binary only, so the image is built for `linux/amd64`, even on Apple Silicon where Docker emulates it. Builds and the simulator are slower than native; enabling Rosetta in Docker Desktop (Settings → General → *Use Rosetta for x86_64/amd64 emulation*) helps.
