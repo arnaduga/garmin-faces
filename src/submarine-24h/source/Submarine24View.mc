@@ -27,7 +27,7 @@ class Submarine24View extends WatchUi.WatchFace {
 
     // Small texts use a vector font (size relative to the screen width) so they can be
     // smaller than the built-in fonts; a built-in font is the fallback.
-    private const EVEN_FONT_SIZE_RATIO = 0.062;
+    private const EVEN_FONT_SIZE_RATIO = 0.072;
     private const ODD_FONT_SIZE_RATIO = 0.042;
     private const LABEL_FONT_SIZE_RATIO = 0.045;
     private const VECTOR_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular", "BionicRegular"];
