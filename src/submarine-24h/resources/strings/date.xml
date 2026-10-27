@@ -1,0 +1,23 @@
+<strings>
+    <!-- Day 1 is Sunday, as in Gregorian.info().day_of_week -->
+    <string id="Day1">dimanche</string>
+    <string id="Day2">lundi</string>
+    <string id="Day3">mardi</string>
+    <string id="Day4">mercredi</string>
+    <string id="Day5">jeudi</string>
+    <string id="Day6">vendredi</string>
+    <string id="Day7">samedi</string>
+
+    <string id="Month1">janvier</string>
+    <string id="Month2">février</string>
+    <string id="Month3">mars</string>
+    <string id="Month4">avril</string>
+    <string id="Month5">mai</string>
+    <string id="Month6">juin</string>
+    <string id="Month7">juillet</string>
+    <string id="Month8">août</string>
+    <string id="Month9">septembre</string>
+    <string id="Month10">octobre</string>
+    <string id="Month11">novembre</string>
+    <string id="Month12">décembre</string>
+</strings>

@@ -3,6 +3,8 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
 import Toybox.System;
+import Toybox.Time;
+import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 
 // 24-hour dial in the style of Russian submarine watches: the hour hand makes
@@ -42,6 +44,12 @@ class Submarine24View extends WatchUi.WatchFace {
 
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
+    // Date: weekday, then day and month, in French whatever the watch language is
+    // (the names come from resources/strings/date.xml).
+    private const DATE_Y = 0.2; // first line, below the center, in radius units
+
+    private var _dayNames as Array<String> = [];
+    private var _monthNames as Array<String> = [];
     private var _lowPower as Boolean = false;
 
     function initialize() {
@@ -51,6 +59,21 @@ class Submarine24View extends WatchUi.WatchFace {
     function onLayout(dc as Dc) as Void {
         _oddFont = smallFont(dc, ODD_FONT_SIZE_RATIO);
         _labelFont = smallFont(dc, LABEL_FONT_SIZE_RATIO);
+
+        var days = [Rez.Strings.Day1, Rez.Strings.Day2, Rez.Strings.Day3, Rez.Strings.Day4,
+                    Rez.Strings.Day5, Rez.Strings.Day6, Rez.Strings.Day7];
+        var months = [Rez.Strings.Month1, Rez.Strings.Month2, Rez.Strings.Month3,
+                      Rez.Strings.Month4, Rez.Strings.Month5, Rez.Strings.Month6,
+                      Rez.Strings.Month7, Rez.Strings.Month8, Rez.Strings.Month9,
+                      Rez.Strings.Month10, Rez.Strings.Month11, Rez.Strings.Month12];
+        _dayNames = [];
+        for (var i = 0; i < days.size(); i++) {
+            _dayNames.add(WatchUi.loadResource(days[i]) as String);
+        }
+        _monthNames = [];
+        for (var i = 0; i < months.size(); i++) {
+            _monthNames.add(WatchUi.loadResource(months[i]) as String);
+        }
     }
 
     private function smallFont(dc as Dc, sizeRatio as Float) as Graphics.FontType {
@@ -88,6 +111,7 @@ class Submarine24View extends WatchUi.WatchFace {
         drawHourDial(dc, cx, cy, radius);
         drawBattery(dc, cx, cy, radius);
         drawSteps(dc, cx, cy, radius);
+        drawDate(dc, cx, cy, radius);
 
         var clock = System.getClockTime();
         var hours = clock.hour + clock.min / 60.0;
@@ -263,6 +287,20 @@ class Submarine24View extends WatchUi.WatchFace {
                                   degrees as Float) as Void {
         var at = polar(cx, cy, degrees * Math.PI / 180.0, ringRadius);
         dc.fillCircle(at[0], at[1], RING_WIDTH / 2);
+    }
+
+    // Two lines under the center: weekday, then day and month (no year).
+    private function drawDate(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
+        var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+        var weekday = _dayNames[now.day_of_week - 1];
+        var dayAndMonth = now.day.toString() + " " + _monthNames[now.month - 1];
+        var y = (cy + radius * DATE_Y).toNumber();
+
+        dc.setColor(NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, y, _labelFont, weekday,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(cx, y + dc.getFontHeight(_labelFont), _labelFont, dayAndMonth,
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // Small lightning bolt centered on (x, y).
