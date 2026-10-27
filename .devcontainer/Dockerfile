@@ -13,9 +13,10 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends xvfb x11vnc novnc websockify fluxbox \
     && rm -rf /var/lib/apt/lists/*
 
-# Timezone database, so the TZ variable passed by scripts/shell.sh takes effect.
+# tzdata: so the TZ variable passed by scripts/shell.sh takes effect.
+# librsvg2-common: SVG pixbuf loader, so GTK can draw the simulator's menu icons.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends tzdata \
+    && apt-get install -y --no-install-recommends tzdata librsvg2-common \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -fsSL https://raw.githubusercontent.com/lindell/connect-iq-sdk-manager-cli/master/install.sh \
