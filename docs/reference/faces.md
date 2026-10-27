@@ -28,6 +28,8 @@ Inspired by Russian submarine watches.
 | Battery ring color | color | green |
 | Battery orange below / red below (%) | number | 30 / 15 |
 | Show seconds hand, date, steps, battery, odd-hour numerals | on/off | on |
+| Show day/night ring | on/off | on |
+| Day / night color | color | yellow / navy |
 | Midnight (24) at the top | on/off | on |
 | Date language | French / English | French |
 
@@ -51,4 +53,8 @@ The `Hand style` setting applies to both the hour and the minute hand.
 | 8 | Arrow | Thin shaft with a square-shouldered arrowhead |
 | 9 | Leaf | Lens shape (sine profile) |
 | 10 | Pencil | Rectangle ending in a point |
+
+### Day/night ring (Submarine 24h)
+
+The outermost ring shows the day (sunrise to sunset, in the day color) against the night (night color) on the 24 h scale. Sun times come from `Weather.getSunrise`/`getSunset` at the last known position (the `Positioning` permission), remembered in storage; they are recomputed once a day. Without any known position the ring is only the night color. When it is shown, the rest of the dial is drawn 5 % smaller.
 

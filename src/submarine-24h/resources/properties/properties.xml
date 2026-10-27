@@ -14,4 +14,7 @@
     <property id="BatteryRedBelow" type="number">15</property>
     <property id="DateLanguage" type="number">0</property>
     <property id="HandStyle" type="number">0</property>
+    <property id="ShowDayNight" type="boolean">true</property>
+    <property id="DayColor" type="number">16776960</property>
+    <property id="NightColor" type="number">1849976</property>
 </properties>

@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Settings for `submarine-24h`: colors, elements to show, midnight position, battery thresholds and date language (French or English). See `docs/how-to/configure-the-face.md`.
 - 11 hand styles for `submarine-24h` (Classic, Baton, Lozenge, Dauphine, Skeleton, Alpha, Breguet, Syringe, Arrow, Leaf, Pencil), selectable with the `Hand style` setting.
+- Optional day/night ring (sunrise to sunset) around the dial of `submarine-24h`, with day and night color settings; needs the `Positioning` permission.
 
 ### Fixed
 

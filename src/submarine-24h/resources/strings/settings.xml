@@ -37,4 +37,8 @@
     <string id="HandStyleArrow">Arrow</string>
     <string id="HandStyleLeaf">Leaf</string>
     <string id="HandStylePencil">Pencil</string>
+    <string id="ShowDayNightTitle">Show day/night ring (sunrise to sunset)</string>
+    <string id="DayColorTitle">Day color</string>
+    <string id="NightColorTitle">Night color</string>
+    <string id="ColorNavy">Navy</string>
 </strings>

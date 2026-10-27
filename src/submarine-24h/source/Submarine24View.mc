@@ -1,10 +1,13 @@
 import Toybox.ActivityMonitor;
+import Toybox.Application;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
+import Toybox.Position;
 import Toybox.System;
 import Toybox.Time;
 import Toybox.Time.Gregorian;
+import Toybox.Weather;
 import Toybox.WatchUi;
 
 // 24-hour dial in the style of Russian submarine watches: the hour hand makes
@@ -42,6 +45,12 @@ class Submarine24View extends WatchUi.WatchFace {
     private const STEPS_RING_RADIUS = 0.19;
     private const STEPS_RING_WIDTH = 7;
 
+    // Day/night ring: the outermost ring, from sunrise to sunset on the 24 h scale.
+    // When it is shown, the rest of the dial is shrunk by DAY_NIGHT_INSET to make room.
+    private const DAY_NIGHT_WIDTH = 6;
+    private const DAY_NIGHT_INSET = 0.95;
+    private const SUN_RETRY_SECONDS = 1800; // retry this often while the location is unknown
+
     // Hand styles (values of the HandStyle setting; 0 = classic).
     private const HAND_STYLE_BATON = 1;
     private const HAND_STYLE_LOZENGE = 2;
@@ -67,6 +76,12 @@ class Submarine24View extends WatchUi.WatchFace {
     private var _lowPower as Boolean = false;
     private var _config as Config = new Config();
 
+    // Sunrise and sunset as hours of the day (null when unknown), refreshed once a day.
+    private var _sunrise as Float or Null = null;
+    private var _sunset as Float or Null = null;
+    private var _sunDay as Number = -1;
+    private var _sunChecked as Number = 0;
+
     function initialize() {
         WatchFace.initialize();
         _config.load();
@@ -76,6 +91,7 @@ class Submarine24View extends WatchUi.WatchFace {
     function reloadSettings() as Void {
         _config.load();
         loadDateNames();
+        _sunDay = -1; // recompute the sun times on the next update
     }
 
     function onLayout(dc as Dc) as Void {
@@ -142,10 +158,16 @@ class Submarine24View extends WatchUi.WatchFace {
     function onUpdate(dc as Dc) as Void {
         var cx = dc.getWidth() / 2;
         var cy = dc.getHeight() / 2;
-        var radius = cx;
+        // The dial is drawn within `radius`; the day/night ring takes the space left at the edge.
+        var radius = _config.showDayNight ? (cx * DAY_NIGHT_INSET).toNumber() : cx;
 
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_BLACK);
         dc.clear();
+
+        if (_config.showDayNight) {
+            updateSunTimes();
+            drawDayNight(dc, cx, cy, cx);
+        }
 
         drawMinuteTrack(dc, cx, cy, radius);
         drawHourDial(dc, cx, cy, radius);
@@ -180,6 +202,88 @@ class Submarine24View extends WatchUi.WatchFace {
         } else {
             dc.fillCircle(cx, cy, radius * 0.035);
         }
+    }
+
+    // Recomputes the sunrise/sunset once a day, or periodically while no location is known.
+    private function updateSunTimes() as Void {
+        var now = Time.now().value();
+        var today = Time.today().value();
+        if (today == _sunDay && (_sunrise != null || now - _sunChecked < SUN_RETRY_SECONDS)) {
+            return;
+        }
+        _sunDay = today;
+        _sunChecked = now;
+        _sunrise = null;
+        _sunset = null;
+        if (!(Toybox has :Weather)) {
+            return;
+        }
+        var location = currentLocation();
+        if (location == null) {
+            return;
+        }
+        try {
+            var rise = Weather.getSunrise(location, Time.now());
+            var set = Weather.getSunset(location, Time.now());
+            if (rise != null && set != null) {
+                _sunrise = hourOfDay(rise);
+                _sunset = hourOfDay(set);
+            }
+        } catch (ex) {
+            // Leave the times unknown.
+        }
+    }
+
+    // Last known position, remembered in storage for when there is no fix.
+    private function currentLocation() as Position.Location or Null {
+        try {
+            var info = Position.getInfo();
+            if (info != null && info.position != null
+                && info.accuracy != Position.QUALITY_NOT_AVAILABLE) {
+                var degrees = info.position.toDegrees();
+                Application.Storage.setValue("latitude", degrees[0]);
+                Application.Storage.setValue("longitude", degrees[1]);
+                return info.position;
+            }
+            var latitude = Application.Storage.getValue("latitude");
+            var longitude = Application.Storage.getValue("longitude");
+            if (latitude != null && longitude != null) {
+                return new Position.Location({
+                    :latitude => latitude,
+                    :longitude => longitude,
+                    :format => :degrees
+                });
+            }
+        } catch (ex) {
+            // No position available.
+        }
+        return null;
+    }
+
+    private function hourOfDay(moment as Time.Moment) as Float {
+        var info = Gregorian.info(moment, Time.FORMAT_SHORT);
+        return info.hour + info.min / 60.0;
+    }
+
+    // Outermost ring: night color all around, day color from sunrise to sunset.
+    private function drawDayNight(dc as Dc, cx as Number, cy as Number, edge as Number) as Void {
+        var ringRadius = edge - DAY_NIGHT_WIDTH / 2;
+        dc.setPenWidth(DAY_NIGHT_WIDTH);
+        dc.setColor(_config.nightColor, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(cx, cy, ringRadius);
+        if (_sunrise != null && _sunset != null) {
+            dc.setColor(_config.dayColor, Graphics.COLOR_TRANSPARENT);
+            dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE,
+                arcDegrees(_sunrise), arcDegrees(_sunset));
+        }
+        dc.setPenWidth(1);
+    }
+
+    // Dc.drawArc angle (0° at 3 o'clock, counter-clockwise) of an hour on the 24h dial.
+    private function arcDegrees(hours as Float) as Number {
+        var compass = hourAngle(hours) * 180.0 / Math.PI;
+        var degrees = (90 - compass + 0.5).toNumber() % 360;
+        return (degrees + 360) % 360;
     }
 
     // Angle (radians, clockwise from the top) of `hours` on the 24h dial.

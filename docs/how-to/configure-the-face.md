@@ -24,3 +24,7 @@ The face reads its settings from `src/submarine-24h/resources/properties/propert
 2. In the simulator, edit the application settings and change **Hand style**; the face is redrawn at each change.
 3. Set the simulated time to compare how each style looks at different angles (for example 10:10, 3:00, 21:45): the hour hand is short and wide, the minute hand long and thin, so a style can look good on one and poor on the other.
 
+## Test the day/night ring
+
+The sunrise and sunset are computed from a position. In the simulator, set one from the **Simulation** menu (the GPS / position entry), then edit the settings or restart so that the sun times are recomputed. Changing the position later does not refresh the ring until the next day, a settings change, or a restart.
+

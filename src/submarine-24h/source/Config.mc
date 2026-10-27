@@ -28,6 +28,10 @@ class Config {
     var dateLanguage as Number = LANGUAGE_FRENCH;
     var handStyle as Number = 0;
 
+    var showDayNight as Boolean = true;
+    var dayColor as Number = 0xFFFF00;
+    var nightColor as Number = 0x1C3A78;
+
     function load() as Void {
         handsColor = readNumber("HandsColor", handsColor);
         secondsColor = readNumber("SecondsColor", secondsColor);
@@ -47,6 +51,10 @@ class Config {
 
         dateLanguage = readNumber("DateLanguage", dateLanguage);
         handStyle = readNumber("HandStyle", handStyle);
+
+        showDayNight = readBoolean("ShowDayNight", showDayNight);
+        dayColor = readNumber("DayColor", dayColor);
+        nightColor = readNumber("NightColor", nightColor);
     }
 
     private function readNumber(key as String, fallback as Number) as Number {
