@@ -15,7 +15,7 @@ if [ "$SDK_VERSION" = "latest" ]; then
 else
   connect-iq-sdk-manager sdk set "$SDK_VERSION"
 fi
-connect-iq-sdk-manager device download -d "$DEVICE"
+connect-iq-sdk-manager device download -d "$DEVICE" --include-fonts
 
 if [ ! -f "$KEY" ]; then
   mkdir -p "$(dirname "$KEY")"

@@ -7,7 +7,7 @@ Installs the SDK, the device files and a developer key.
 | Variable | Default | Meaning |
 |---|---|---|
 | `SDK_VERSION` | `latest` | Version passed to `sdk set` |
-| `DEVICE` | `vivoactive6` | Device whose files are downloaded |
+| `DEVICE` | `vivoactive6` | Device whose files (including simulator fonts) are downloaded |
 | `DEVELOPER_KEY` | `.keys/developer_key.der` | Signing key path (generated if missing) |
 
 ## `scripts/build.sh <project-dir> [device]`
