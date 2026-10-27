@@ -33,8 +33,8 @@ class Submarine24View extends WatchUi.WatchFace {
     // Angles are in degrees clockwise from the top (0° = 12 o'clock); the ring runs
     // clockwise from STEPS_RING_START to STEPS_RING_END, leaving a gap for the icon.
     private const STEPS_COLOR = 0x00AAFF;
-    private const STEPS_RING_START = 320;
-    private const STEPS_RING_END = 300;
+    private const STEPS_RING_START = 335;
+    private const STEPS_RING_END = 285;
     private const STEPS_RING_ANGLE = 60.0; // position on the dial, clockwise from the top
     private const STEPS_RING_DISTANCE = 0.40; // from the center, in radius units
     private const STEPS_RING_RADIUS = 0.16;
