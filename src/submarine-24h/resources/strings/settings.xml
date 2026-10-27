@@ -25,4 +25,16 @@
     <string id="ColorYellow">Yellow</string>
     <string id="ColorMagenta">Magenta</string>
     <string id="ColorGrey">Grey</string>
+    <string id="HandStyleTitle">Hand style</string>
+    <string id="HandStyleClassic">Classic</string>
+    <string id="HandStyleBaton">Baton</string>
+    <string id="HandStyleLozenge">Lozenge</string>
+    <string id="HandStyleDauphine">Dauphine</string>
+    <string id="HandStyleSkeleton">Skeleton</string>
+    <string id="HandStyleAlpha">Alpha</string>
+    <string id="HandStyleBreguet">Breguet</string>
+    <string id="HandStyleSyringe">Syringe</string>
+    <string id="HandStyleArrow">Arrow</string>
+    <string id="HandStyleLeaf">Leaf</string>
+    <string id="HandStylePencil">Pencil</string>
 </strings>

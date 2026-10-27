@@ -13,4 +13,5 @@
     <property id="BatteryOrangeBelow" type="number">30</property>
     <property id="BatteryRedBelow" type="number">15</property>
     <property id="DateLanguage" type="number">0</property>
+    <property id="HandStyle" type="number">0</property>
 </properties>

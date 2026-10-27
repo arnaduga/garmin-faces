@@ -42,6 +42,18 @@ class Submarine24View extends WatchUi.WatchFace {
     private const STEPS_RING_RADIUS = 0.19;
     private const STEPS_RING_WIDTH = 7;
 
+    // Hand styles (values of the HandStyle setting; 0 = classic).
+    private const HAND_STYLE_BATON = 1;
+    private const HAND_STYLE_LOZENGE = 2;
+    private const HAND_STYLE_DAUPHINE = 3;
+    private const HAND_STYLE_SKELETON = 4;
+    private const HAND_STYLE_ALPHA = 5;
+    private const HAND_STYLE_BREGUET = 6;
+    private const HAND_STYLE_SYRINGE = 7;
+    private const HAND_STYLE_ARROW = 8;
+    private const HAND_STYLE_LEAF = 9;
+    private const HAND_STYLE_PENCIL = 10;
+
     private var _evenFont as Graphics.FontType = Graphics.FONT_TINY;
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
@@ -352,13 +364,118 @@ class Submarine24View extends WatchUi.WatchFace {
         ] as Array<Graphics.Point2D>);
     }
 
-    // Tapered hand: a kite with a short tail behind the center.
+    // Hand drawn in the style chosen in the settings (see HAND_STYLE_* below). The shape is
+    // described in a local frame: `s` runs along the hand from the center towards the tip,
+    // `p` across it (positive to the right).
     private function drawHand(dc as Dc, cx as Number, cy as Number, angle as Float,
                               length as Float, width as Float, tail as Float) as Void {
-        var tip = polar(cx, cy, angle, length);
-        var left = polar(cx, cy, angle - 0.5 * Math.PI, width / 2);
-        var right = polar(cx, cy, angle + 0.5 * Math.PI, width / 2);
-        var back = polar(cx, cy, angle + Math.PI, tail);
-        dc.fillPolygon([back, left, tip, right] as Array<Graphics.Point2D>);
+        var style = _config.handStyle;
+        var color = _config.handsColor;
+        var l = length;
+        var t = tail;
+        var w = width / 2.0;      // half width at the widest point
+        var b = width * 0.3;      // half width of thin parts
+        dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+
+        if (style == HAND_STYLE_BATON) {
+            fill(dc, cx, cy, angle, [[-t, -b * 1.4], [l, -b * 1.4], [l, b * 1.4], [-t, b * 1.4]]);
+        } else if (style == HAND_STYLE_LOZENGE) {
+            fill(dc, cx, cy, angle, [[-t, 0], [0.25 * l, -w], [l, 0], [0.25 * l, w]]);
+        } else if (style == HAND_STYLE_DAUPHINE) {
+            fill(dc, cx, cy, angle, [[-t, 0], [0, -w], [l, 0], [0, w]]);
+            // Dark ridge along the middle gives the two-facet look.
+            dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
+            var from = localPoint(cx, cy, angle, -t, 0);
+            var to = localPoint(cx, cy, angle, l, 0);
+            dc.drawLine(from[0], from[1], to[0], to[1]);
+            dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+        } else if (style == HAND_STYLE_SKELETON) {
+            outline(dc, cx, cy, angle, [[-t, 0], [0, -w], [l, 0], [0, w]]);
+        } else if (style == HAND_STYLE_ALPHA) {
+            fill(dc, cx, cy, angle, [[-t, -b * 0.6], [0.55 * l, -b * 0.6], [0.7 * l, -w],
+                                     [l, 0], [0.7 * l, w], [0.55 * l, b * 0.6], [-t, b * 0.6]]);
+        } else if (style == HAND_STYLE_BREGUET) {
+            // Thin stem with a ring ("apple") near the tip.
+            var r = w * 0.9;
+            var c = 0.78 * l;
+            line(dc, cx, cy, angle, -t, c - r, 3);
+            var at = localPoint(cx, cy, angle, c, 0);
+            dc.setPenWidth(2);
+            dc.drawCircle(at[0], at[1], r);
+            line(dc, cx, cy, angle, c + r, l, 3);
+            dc.setPenWidth(1);
+        } else if (style == HAND_STYLE_SYRINGE) {
+            line(dc, cx, cy, angle, -t, l, 3);
+            fill(dc, cx, cy, angle, [[0.15 * l, -w], [0.55 * l, -w], [0.55 * l, w], [0.15 * l, w]]);
+        } else if (style == HAND_STYLE_ARROW) {
+            fill(dc, cx, cy, angle, [[-t, -b * 0.6], [0.7 * l, -b * 0.6], [0.7 * l, -w * 1.4],
+                                     [l, 0], [0.7 * l, w * 1.4], [0.7 * l, b * 0.6], [-t, b * 0.6]]);
+        } else if (style == HAND_STYLE_LEAF) {
+            // Lens shape: half width follows a sine from the tail to the tip.
+            var steps = 8;
+            var left = [];
+            var right = [];
+            for (var i = 0; i <= steps; i++) {
+                var k = i.toFloat() / steps;
+                var s = -t + k * (l + t);
+                var p = w * Math.sin(Math.PI * k);
+                left.add([s, -p]);
+                if (i > 0 && i < steps) {
+                    right.add([s, p]);
+                }
+            }
+            for (var i = right.size() - 1; i >= 0; i--) {
+                left.add(right[i]);
+            }
+            fill(dc, cx, cy, angle, left);
+        } else if (style == HAND_STYLE_PENCIL) {
+            fill(dc, cx, cy, angle, [[-t, -b * 1.4], [0.82 * l, -b * 1.4], [l, 0],
+                                     [0.82 * l, b * 1.4], [-t, b * 1.4]]);
+        } else {
+            // Classic: tapered kite with a short tail behind the center.
+            fill(dc, cx, cy, angle, [[-t, 0], [0, -w], [l, 0], [0, w]]);
+        }
+    }
+
+    // Point at (s, p) in the hand's local frame.
+    private function localPoint(cx as Number, cy as Number, angle as Float,
+                                s as Numeric, p as Numeric) as Graphics.Point2D {
+        return [cx + s * Math.sin(angle) + p * Math.cos(angle),
+                cy - s * Math.cos(angle) + p * Math.sin(angle)] as Graphics.Point2D;
+    }
+
+    private function toPoints(cx as Number, cy as Number, angle as Float,
+                              shape as Array) as Array<Graphics.Point2D> {
+        var typed = shape as Array<Array<Numeric>>;
+        var points = [] as Array<Graphics.Point2D>;
+        for (var i = 0; i < typed.size(); i++) {
+            points.add(localPoint(cx, cy, angle, typed[i][0], typed[i][1]));
+        }
+        return points;
+    }
+
+    private function fill(dc as Dc, cx as Number, cy as Number, angle as Float,
+                          shape as Array) as Void {
+        dc.fillPolygon(toPoints(cx, cy, angle, shape));
+    }
+
+    private function outline(dc as Dc, cx as Number, cy as Number, angle as Float,
+                             shape as Array) as Void {
+        var points = toPoints(cx, cy, angle, shape);
+        dc.setPenWidth(2);
+        for (var i = 0; i < points.size(); i++) {
+            var next = points[(i + 1) % points.size()];
+            dc.drawLine(points[i][0], points[i][1], next[0], next[1]);
+        }
+        dc.setPenWidth(1);
+    }
+
+    private function line(dc as Dc, cx as Number, cy as Number, angle as Float,
+                          fromS as Numeric, toS as Numeric, penWidth as Number) as Void {
+        var from = localPoint(cx, cy, angle, fromS, 0);
+        var to = localPoint(cx, cy, angle, toS, 0);
+        dc.setPenWidth(penWidth);
+        dc.drawLine(from[0], from[1], to[0], to[1]);
+        dc.setPenWidth(1);
     }
 }

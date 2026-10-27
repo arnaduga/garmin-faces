@@ -99,4 +99,19 @@
             <listEntry value="1">@Strings.LanguageEnglish</listEntry>
         </settingConfig>
     </setting>
+    <setting propertyKey="@Properties.HandStyle" title="@Strings.HandStyleTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.HandStyleClassic</listEntry>
+            <listEntry value="1">@Strings.HandStyleBaton</listEntry>
+            <listEntry value="2">@Strings.HandStyleLozenge</listEntry>
+            <listEntry value="3">@Strings.HandStyleDauphine</listEntry>
+            <listEntry value="4">@Strings.HandStyleSkeleton</listEntry>
+            <listEntry value="5">@Strings.HandStyleAlpha</listEntry>
+            <listEntry value="6">@Strings.HandStyleBreguet</listEntry>
+            <listEntry value="7">@Strings.HandStyleSyringe</listEntry>
+            <listEntry value="8">@Strings.HandStyleArrow</listEntry>
+            <listEntry value="9">@Strings.HandStyleLeaf</listEntry>
+            <listEntry value="10">@Strings.HandStylePencil</listEntry>
+        </settingConfig>
+    </setting>
 </settings>

@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `submarine-24h` watch face: analog 24-hour dial in the style of Russian submarine watches (`src/submarine-24h`), with a battery ring and percentage on the outer edge a steps gauge and the date in French.
 
 - Settings for `submarine-24h`: colors, elements to show, midnight position, battery thresholds and date language (French or English). See `docs/how-to/configure-the-face.md`.
+- 11 hand styles for `submarine-24h` (Classic, Baton, Lozenge, Dauphine, Skeleton, Alpha, Breguet, Syringe, Arrow, Leaf, Pencil), selectable with the `Hand style` setting.
 
 ### Fixed
 

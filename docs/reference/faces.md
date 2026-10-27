@@ -34,3 +34,21 @@ Inspired by Russian submarine watches.
 The battery ring and its label always stay at the top: with midnight at the bottom, the ring no longer lines up with the 1 h and 23 h marks.
 The settings screen is in English. Values are read by `Config` (`source/Config.mc`).
 
+### Hand styles (Submarine 24h)
+
+The `Hand style` setting applies to both the hour and the minute hand.
+
+| Value | Name | Look |
+|---|---|---|
+| 0 | Classic | Tapered kite with a short tail |
+| 1 | Baton | Plain rectangle |
+| 2 | Lozenge | Diamond, widest at a quarter of the length |
+| 3 | Dauphine | Kite with a dark ridge down the middle (two facets) |
+| 4 | Skeleton | Outline only |
+| 5 | Alpha | Thin stem swelling into a leaf near the tip |
+| 6 | Breguet | Thin stem with a ring near the tip |
+| 7 | Syringe | Thin needle with a wide section on the stem |
+| 8 | Arrow | Thin shaft with a square-shouldered arrowhead |
+| 9 | Leaf | Lens shape (sine profile) |
+| 10 | Pencil | Rectangle ending in a point |
+

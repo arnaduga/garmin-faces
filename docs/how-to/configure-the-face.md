@@ -17,3 +17,10 @@ The face reads its settings from `src/submarine-24h/resources/properties/propert
 4. Rebuild and rerun the simulator: new properties are only picked up after a build.
 
 > On a real watch, settings are edited from the phone app. This normally requires the face to be installed from the Connect IQ Store (a private beta is enough); a sideloaded `.prg` has no settings screen.
+
+## Preview the hand styles
+
+1. Run `scripts/simulate.sh src/submarine-24h` (this rebuilds the face).
+2. In the simulator, edit the application settings and change **Hand style**; the face is redrawn at each change.
+3. Set the simulated time to compare how each style looks at different angles (for example 10:10, 3:00, 21:45): the hour hand is short and wide, the minute hand long and thin, so a style can look good on one and poor on the other.
+

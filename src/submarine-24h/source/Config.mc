@@ -26,6 +26,7 @@ class Config {
     var midnightAtTop as Boolean = true;
 
     var dateLanguage as Number = LANGUAGE_FRENCH;
+    var handStyle as Number = 0;
 
     function load() as Void {
         handsColor = readNumber("HandsColor", handsColor);
@@ -45,6 +46,7 @@ class Config {
         midnightAtTop = readBoolean("MidnightAtTop", midnightAtTop);
 
         dateLanguage = readNumber("DateLanguage", dateLanguage);
+        handStyle = readNumber("HandStyle", handStyle);
     }
 
     private function readNumber(key as String, fallback as Number) as Number {
