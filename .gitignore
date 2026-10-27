@@ -1,0 +1,16 @@
+# Secrets: Connect IQ signing key
+.keys/
+*.der
+*.pem
+
+# Build output
+build/
+bin/
+*.prg
+*.iq
+
+# Simulator / SDK artefacts
+*.json.bak
+GARMIN/
+
+.DS_Store

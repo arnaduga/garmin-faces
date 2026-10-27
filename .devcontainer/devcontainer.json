@@ -1,0 +1,19 @@
+{
+  "name": "garmin-faces",
+  "build": { "dockerfile": "Dockerfile" },
+  "remoteUser": "vscode",
+  "mounts": [
+    // Keep the SDK and downloaded device files across container rebuilds.
+    "source=garmin-faces-sdk,target=/home/vscode/.Garmin,type=volume",
+    "source=garmin-faces-sdk-manager,target=/home/vscode/.connect-iq-sdk-manager,type=volume"
+  ],
+  "postCreateCommand": "sudo chown -R vscode:vscode /home/vscode/.Garmin /home/vscode/.connect-iq-sdk-manager",
+  "containerEnv": {
+    "DEVELOPER_KEY": "${containerWorkspaceFolder}/.keys/developer_key.der"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["garmin.monkey-c"]
+    }
+  }
+}
