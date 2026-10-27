@@ -22,12 +22,14 @@ class Submarine24View extends WatchUi.WatchFace {
     // Label distance from the center: inside the ring so the text is not clipped by the screen edge.
     private const LABEL_RADIUS = 0.885;
 
-    // Odd-hour numerals use a vector font (size in pixels, relative to the screen width)
-    // so they can be smaller than the smallest built-in font; FONT_XTINY is the fallback.
+    // Small texts use a vector font (size relative to the screen width) so they can be
+    // smaller than the smallest built-in font; FONT_XTINY is the fallback.
     private const ODD_FONT_SIZE_RATIO = 0.042;
-    private const ODD_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular", "BionicRegular"];
+    private const LABEL_FONT_SIZE_RATIO = 0.045;
+    private const VECTOR_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular", "BionicRegular"];
 
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
+    private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _lowPower as Boolean = false;
 
     function initialize() {
@@ -35,15 +37,21 @@ class Submarine24View extends WatchUi.WatchFace {
     }
 
     function onLayout(dc as Dc) as Void {
+        _oddFont = smallFont(dc, ODD_FONT_SIZE_RATIO);
+        _labelFont = smallFont(dc, LABEL_FONT_SIZE_RATIO);
+    }
+
+    private function smallFont(dc as Dc, sizeRatio as Float) as Graphics.FontType {
         if (Graphics has :getVectorFont) {
             var font = Graphics.getVectorFont({
-                :face => ODD_FONT_FACES,
-                :size => (dc.getWidth() * ODD_FONT_SIZE_RATIO).toNumber()
+                :face => VECTOR_FONT_FACES,
+                :size => (dc.getWidth() * sizeRatio).toNumber()
             });
             if (font != null) {
-                _oddFont = font;
+                return font;
             }
         }
+        return Graphics.FONT_XTINY;
     }
 
     function onEnterSleep() as Void {
@@ -169,13 +177,13 @@ class Submarine24View extends WatchUi.WatchFace {
         var text = level.format("%d") + "%";
         var boltWidth = 10;
         var spacing = 4;
-        var textWidth = dc.getTextWidthInPixels(text, Graphics.FONT_XTINY);
+        var textWidth = dc.getTextWidthInPixels(text, _labelFont);
         var left = cx - (boltWidth + spacing + textWidth) / 2;
         var labelY = (cy - radius * LABEL_RADIUS).toNumber();
 
         drawBolt(dc, left + boltWidth / 2, labelY);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(left + boltWidth + spacing, labelY, Graphics.FONT_XTINY, text,
+        dc.drawText(left + boltWidth + spacing, labelY, _labelFont, text,
             Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
