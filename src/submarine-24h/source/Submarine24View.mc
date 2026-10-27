@@ -11,6 +11,7 @@ class Submarine24View extends WatchUi.WatchFace {
 
     private const NUMERAL_COLOR = 0xDDDDDD;
     private const ODD_NUMERAL_COLOR = 0x777777;
+    private const ODD_MARK_COLOR = Graphics.COLOR_ORANGE;
     private const HAND_COLOR = 0xE8E8E8;
     private const SECONDS_COLOR = Graphics.COLOR_RED;
 
@@ -111,8 +112,13 @@ class Submarine24View extends WatchUi.WatchFace {
                 dc.setColor(ODD_NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(at[0], at[1], Graphics.FONT_XTINY, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-                dc.setColor(NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
-                drawTriangle(dc, cx, cy, angle, radius * 0.79, radius * 0.85, radius * 0.025, true);
+                // Odd-hour mark: a thick colored tick on the minute track, bolder than the minute ticks.
+                var from = polar(cx, cy, angle, radius * 0.875);
+                var to = polar(cx, cy, angle, radius * 0.94);
+                dc.setColor(ODD_MARK_COLOR, Graphics.COLOR_TRANSPARENT);
+                dc.setPenWidth(4);
+                dc.drawLine(from[0], from[1], to[0], to[1]);
+                dc.setPenWidth(1);
             }
         }
     }
