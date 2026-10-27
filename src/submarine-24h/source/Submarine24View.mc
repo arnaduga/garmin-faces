@@ -141,7 +141,7 @@ class Submarine24View extends WatchUi.WatchFace {
                 color = Graphics.COLOR_ORANGE;
             }
             dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-            dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, start, (start - span + 360) % 360);
+            dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, start, (start - span + 360).toNumber() % 360);
         }
         dc.setPenWidth(1);
 
@@ -151,7 +151,7 @@ class Submarine24View extends WatchUi.WatchFace {
         var spacing = 4;
         var textWidth = dc.getTextWidthInPixels(text, Graphics.FONT_XTINY);
         var left = cx - (boltWidth + spacing + textWidth) / 2;
-        var labelY = cy - ringRadius;
+        var labelY = (cy - ringRadius).toNumber();
 
         drawBolt(dc, left + boltWidth / 2, labelY);
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
