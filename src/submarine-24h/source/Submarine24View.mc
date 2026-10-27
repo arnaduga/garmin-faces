@@ -110,7 +110,7 @@ class Submarine24View extends WatchUi.WatchFace {
                 dc.drawText(at[0], at[1], Graphics.FONT_SMALL, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             } else {
-                var at = polar(cx, cy, angle, radius * 0.58);
+                var at = polar(cx, cy, angle, radius * 0.8);
                 dc.setColor(ODD_NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(at[0], at[1], Graphics.FONT_XTINY, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
