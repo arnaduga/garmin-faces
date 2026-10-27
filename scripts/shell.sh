@@ -7,7 +7,13 @@ cd "$(dirname "$0")/.."
 IMAGE=garmin-faces-dev
 
 # The Connect IQ simulator is x86_64 only: emulate it on Apple Silicon.
-docker build -q --platform linux/amd64 -t "$IMAGE" .devcontainer >/dev/null
+LOG="$(mktemp)"
+if ! docker build --progress=plain --platform linux/amd64 -t "$IMAGE" .devcontainer >"$LOG" 2>&1; then
+  tail -n 60 "$LOG" >&2
+  echo "Image build failed (full log: $LOG)" >&2
+  exit 1
+fi
+rm -f "$LOG"
 
 TTY=()
 [ -t 0 ] && TTY=(-it)
