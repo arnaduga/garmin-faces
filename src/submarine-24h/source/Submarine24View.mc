@@ -30,8 +30,8 @@ class Submarine24View extends WatchUi.WatchFace {
     private const VECTOR_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular", "BionicRegular"];
 
     // Steps gauge: small ring at about 2 o'clock, with a footprint icon in its gap.
-    // Angles use the Dc.drawArc convention (0° = 3 o'clock, counter-clockwise);
-    // the ring runs clockwise from STEPS_RING_START to STEPS_RING_END.
+    // Angles are in degrees clockwise from the top (0° = 12 o'clock); the ring runs
+    // clockwise from STEPS_RING_START to STEPS_RING_END, leaving a gap for the icon.
     private const STEPS_COLOR = 0x00AAFF;
     private const STEPS_RING_START = 320;
     private const STEPS_RING_END = 300;
@@ -213,15 +213,18 @@ class Submarine24View extends WatchUi.WatchFace {
         var x = center[0].toNumber();
         var y = center[1].toNumber();
         var ringRadius = (radius * STEPS_RING_RADIUS).toNumber();
-        var sweep = ((STEPS_RING_START - STEPS_RING_END + 360) % 360) * ratio;
+        var sweep = ((STEPS_RING_END - STEPS_RING_START + 360) % 360) * ratio;
+        // Dc.drawArc angles: 0° is 3 o'clock and they grow counter-clockwise.
+        var arcStart = (90 - STEPS_RING_START + 360) % 360;
+        var arcEnd = (90 - STEPS_RING_END + 360) % 360;
 
         dc.setPenWidth(STEPS_RING_WIDTH);
         dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
-        dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, STEPS_RING_START, STEPS_RING_END);
+        dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, arcStart, arcEnd);
         if (sweep >= 1) {
             dc.setColor(STEPS_COLOR, Graphics.COLOR_TRANSPARENT);
-            dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, STEPS_RING_START,
-                (STEPS_RING_START - sweep + 360).toNumber() % 360);
+            dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, arcStart,
+                (arcStart - sweep + 360).toNumber() % 360);
         }
         dc.setPenWidth(1);
 
@@ -233,8 +236,8 @@ class Submarine24View extends WatchUi.WatchFace {
         // Footprints in the gap of the ring, halfway between its two ends.
         var gapAngle = (STEPS_RING_START + STEPS_RING_END) / 2.0 * Math.PI / 180.0;
         dc.setColor(STEPS_COLOR, Graphics.COLOR_TRANSPARENT);
-        drawFootprint(dc, x + (ringRadius * Math.cos(gapAngle)).toNumber(),
-            y - (ringRadius * Math.sin(gapAngle)).toNumber());
+        drawFootprint(dc, x + (ringRadius * Math.sin(gapAngle)).toNumber(),
+            y - (ringRadius * Math.cos(gapAngle)).toNumber());
     }
 
     // Two small shoe prints, centered on (x, y).
