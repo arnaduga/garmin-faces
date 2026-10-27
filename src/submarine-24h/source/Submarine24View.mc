@@ -1,3 +1,4 @@
+import Toybox.ActivityMonitor;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
@@ -27,6 +28,17 @@ class Submarine24View extends WatchUi.WatchFace {
     private const ODD_FONT_SIZE_RATIO = 0.042;
     private const LABEL_FONT_SIZE_RATIO = 0.045;
     private const VECTOR_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular", "BionicRegular"];
+
+    // Steps gauge: small ring at about 2 o'clock, with a footprint icon in its gap.
+    // Angles use the Dc.drawArc convention (0° = 3 o'clock, counter-clockwise);
+    // the ring runs clockwise from STEPS_RING_START to STEPS_RING_END.
+    private const STEPS_COLOR = 0x00AAFF;
+    private const STEPS_RING_START = 320;
+    private const STEPS_RING_END = 300;
+    private const STEPS_RING_ANGLE = 60.0; // position on the dial, clockwise from the top
+    private const STEPS_RING_DISTANCE = 0.42; // from the center, in radius units
+    private const STEPS_RING_RADIUS = 0.12;
+    private const STEPS_RING_WIDTH = 4;
 
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
@@ -75,6 +87,7 @@ class Submarine24View extends WatchUi.WatchFace {
         drawMinuteTrack(dc, cx, cy, radius);
         drawHourDial(dc, cx, cy, radius);
         drawBattery(dc, cx, cy, radius);
+        drawSteps(dc, cx, cy, radius);
 
         var clock = System.getClockTime();
         var hours = clock.hour + clock.min / 60.0;
@@ -185,6 +198,43 @@ class Submarine24View extends WatchUi.WatchFace {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(left + boltWidth + spacing, labelY, _labelFont, text,
             Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    }
+
+    private function drawSteps(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
+        var info = ActivityMonitor.getInfo();
+        var steps = (info.steps != null) ? info.steps : 0;
+        var goal = (info.stepGoal != null) ? info.stepGoal : 0;
+        var ratio = (goal > 0) ? Math.fmin(steps.toFloat() / goal, 1.0) : 0.0;
+
+        var center = polar(cx, cy, STEPS_RING_ANGLE * Math.PI / 180.0, radius * STEPS_RING_DISTANCE);
+        var x = center[0].toNumber();
+        var y = center[1].toNumber();
+        var ringRadius = (radius * STEPS_RING_RADIUS).toNumber();
+        var sweep = ((STEPS_RING_START - STEPS_RING_END + 360) % 360) * ratio;
+
+        dc.setPenWidth(STEPS_RING_WIDTH);
+        dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
+        dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, STEPS_RING_START, STEPS_RING_END);
+        if (sweep >= 1) {
+            dc.setColor(STEPS_COLOR, Graphics.COLOR_TRANSPARENT);
+            dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, STEPS_RING_START,
+                (STEPS_RING_START - sweep + 360).toNumber() % 360);
+        }
+        dc.setPenWidth(1);
+
+        // Footprints in the gap of the ring, halfway between its two ends.
+        var gapAngle = (STEPS_RING_START + STEPS_RING_END) / 2.0 * Math.PI / 180.0;
+        dc.setColor(STEPS_COLOR, Graphics.COLOR_TRANSPARENT);
+        drawFootprint(dc, x + (ringRadius * Math.cos(gapAngle)).toNumber(),
+            y - (ringRadius * Math.sin(gapAngle)).toNumber());
+    }
+
+    // Two small shoe prints, centered on (x, y).
+    private function drawFootprint(dc as Dc, x as Number, y as Number) as Void {
+        dc.fillEllipse(x - 3, y - 1, 2, 3);
+        dc.fillEllipse(x - 3, y + 4, 1, 1);
+        dc.fillEllipse(x + 3, y - 5, 2, 3);
+        dc.fillEllipse(x + 3, y, 1, 1);
     }
 
     // Small lightning bolt centered on (x, y).

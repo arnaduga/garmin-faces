@@ -13,4 +13,4 @@ Inspired by Russian submarine watches.
 - Even hours are large white numerals; odd hours are small, dark grey, each marked by a thick orange tick on the minute track.
 - The red seconds hand is only drawn in high-power mode (not while the display is dimmed).
 - Battery: a ring on the outer edge (green, orange below 30 %, red below 15 %) filling clockwise from the top; the remaining charge is shown at the top, preceded by a lightning bolt.
-
+- Steps: a small blue ring at about 2 o'clock (steps / daily goal), running clockwise from 320° to 300° (`Dc.drawArc` angles), with a footprint icon in its gap. Tunable through the `STEPS_*` constants in `Submarine24View.mc`.
