@@ -10,7 +10,13 @@ scripts/build.sh "$PROJECT" "$DEVICE"
 export PATH="$(connect-iq-sdk-manager sdk current-path --bin):$PATH"
 
 export DISPLAY=:99
-Xvfb :99 -screen 0 1280x800x24 >/dev/null 2>&1 &
+# No GPU in the container: force software rendering.
+export LIBGL_ALWAYS_SOFTWARE=1
+export GDK_BACKEND=x11
+export WEBKIT_DISABLE_COMPOSITING_MODE=1
+export NO_AT_BRIDGE=1
+
+Xvfb :99 -screen 0 1280x800x24 +extension GLX +render -noreset >/dev/null 2>&1 &
 trap 'kill $(jobs -p) 2>/dev/null' EXIT
 sleep 1
 fluxbox >/dev/null 2>&1 &
