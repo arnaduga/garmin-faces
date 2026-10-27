@@ -13,6 +13,11 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends xvfb x11vnc novnc websockify fluxbox \
     && rm -rf /var/lib/apt/lists/*
 
+# Timezone database, so the TZ variable passed by scripts/shell.sh takes effect.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends tzdata \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN curl -fsSL https://raw.githubusercontent.com/lindell/connect-iq-sdk-manager-cli/master/install.sh \
     | BINDIR=/usr/local/bin sh
 

@@ -15,6 +15,9 @@ if ! docker build --progress=plain --platform linux/amd64 -t "$IMAGE" .devcontai
 fi
 rm -f "$LOG"
 
+# Same timezone as the host, so the simulator shows the local time.
+TZ_NAME="${TZ:-$(readlink /etc/localtime | sed 's|.*/zoneinfo/||')}"
+
 TTY=()
 [ -t 0 ] && TTY=(-it)
 
@@ -23,5 +26,6 @@ exec docker run --rm --platform linux/amd64 "${TTY[@]}" \
   -v "$PWD":/workspace -w /workspace \
   -v garmin-faces-sdk:/home/vscode/.Garmin \
   -v garmin-faces-sdk-manager:/home/vscode/.connect-iq-sdk-manager \
+  -e TZ="$TZ_NAME" \
   -e DEVELOPER_KEY=/workspace/.keys/developer_key.der \
   --user vscode "$IMAGE" "${@:-bash}"
