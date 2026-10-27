@@ -2,20 +2,31 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
 import Toybox.System;
-import Toybox.Time;
-import Toybox.Time.Gregorian;
 import Toybox.WatchUi;
 
-// 24-hour dial in the style of Soviet/Russian submarine watches:
-// the hour hand makes one turn per day, the dial shows 1..24.
+// 24-hour dial in the style of Russian submarine watches: the hour hand makes
+// one turn per day, midnight (24) is at the top and noon (12) at the bottom.
+// Even hours are large numerals, odd hours small ones.
 class Submarine24View extends WatchUi.WatchFace {
 
-    // Angle (radians, clockwise from the top) of hour 0 on the dial.
-    // PI puts midnight at the bottom and noon at the top.
-    private const MIDNIGHT_ANGLE = Math.PI;
+    private const NUMERAL_COLOR = 0xDDDDDD;
+    private const HAND_COLOR = 0xE8E8E8;
+    private const SECONDS_COLOR = Graphics.COLOR_RED;
+
+    private var _lowPower as Boolean = false;
 
     function initialize() {
         WatchFace.initialize();
+    }
+
+    function onEnterSleep() as Void {
+        _lowPower = true;
+        WatchUi.requestUpdate();
+    }
+
+    function onExitSleep() as Void {
+        _lowPower = false;
+        WatchUi.requestUpdate();
     }
 
     function onUpdate(dc as Dc) as Void {
@@ -28,24 +39,31 @@ class Submarine24View extends WatchUi.WatchFace {
 
         drawMinuteTrack(dc, cx, cy, radius);
         drawHourDial(dc, cx, cy, radius);
-        drawDate(dc, cx, cy, radius);
 
         var clock = System.getClockTime();
         var hours = clock.hour + clock.min / 60.0;
 
-        // Hour hand (24h scale) and minute hand (60 min scale).
-        dc.setColor(Graphics.COLOR_ORANGE, Graphics.COLOR_TRANSPARENT);
-        drawHand(dc, cx, cy, hourAngle(hours), radius * 0.58, radius * 0.07, radius * 0.1);
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        drawHand(dc, cx, cy, clock.min / 60.0 * 2 * Math.PI, radius * 0.92, radius * 0.04, radius * 0.12);
+        dc.setColor(HAND_COLOR, Graphics.COLOR_TRANSPARENT);
+        drawHand(dc, cx, cy, hourAngle(hours), radius * 0.55, radius * 0.09, radius * 0.1);
+        drawHand(dc, cx, cy, (clock.min + clock.sec / 60.0) / 60.0 * 2 * Math.PI,
+            radius * 0.88, radius * 0.06, radius * 0.1);
 
-        dc.fillCircle(cx, cy, radius * 0.045);
-        dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(cx, cy, radius * 0.02);
+        // The seconds hand is only drawn in high-power mode (saves AMOLED power).
+        if (!_lowPower) {
+            dc.setColor(SECONDS_COLOR, Graphics.COLOR_TRANSPARENT);
+            var angle = clock.sec / 60.0 * 2 * Math.PI;
+            var from = polar(cx, cy, angle + Math.PI, radius * 0.18);
+            var to = polar(cx, cy, angle, radius * 0.9);
+            dc.setPenWidth(2);
+            dc.drawLine(from[0], from[1], to[0], to[1]);
+            dc.setPenWidth(1);
+            dc.fillCircle(cx, cy, radius * 0.035);
+        }
     }
 
+    // Angle (radians, clockwise from the top) of `hours` on the 24h dial.
     private function hourAngle(hours as Float) as Float {
-        return MIDNIGHT_ANGLE + hours / 24.0 * 2 * Math.PI;
+        return hours / 24.0 * 2 * Math.PI;
     }
 
     // Point at `angle` (clockwise from the top) and `distance` from the center.
@@ -67,26 +85,46 @@ class Submarine24View extends WatchUi.WatchFace {
     }
 
     private function drawHourDial(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
+        dc.setColor(NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
         for (var h = 1; h <= 24; h++) {
             var angle = hourAngle(h.toFloat());
-            var at = polar(cx, cy, angle, radius * 0.77);
-            // Night hours (19..05) are dimmed, like the dark half of a 24h dial.
-            var isNight = (h >= 19 || h <= 5);
-            dc.setColor(isNight ? Graphics.COLOR_LT_GRAY : Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(at[0], at[1], Graphics.FONT_XTINY, h.toString(),
-                Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            if (h == 12) {
+                // Noon: hollow triangle pointing outwards instead of a numeral.
+                drawTriangle(dc, cx, cy, angle, radius * 0.68, radius * 0.8, radius * 0.06, false);
+            } else if (h % 2 == 0) {
+                var at = polar(cx, cy, angle, radius * 0.74);
+                dc.drawText(at[0], at[1], Graphics.FONT_MEDIUM, h.toString(),
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+            } else {
+                var at = polar(cx, cy, angle, radius * 0.58);
+                dc.drawText(at[0], at[1], Graphics.FONT_XTINY, h.toString(),
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                drawTriangle(dc, cx, cy, angle, radius * 0.84, radius * 0.9, radius * 0.025, true);
+            }
         }
     }
 
-    private function drawDate(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
-        var now = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-        var w = radius * 0.22;
-        var h = radius * 0.14;
-        var at = polar(cx, cy, 0.5 * Math.PI, radius * 0.38);
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(at[0] - w / 2, at[1] - h / 2, w, h);
-        dc.drawText(at[0], at[1], Graphics.FONT_XTINY, now.day.toString(),
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    // Triangle with its base at `baseDist` and its tip at `tipDist` from the center.
+    private function drawTriangle(dc as Dc, cx as Number, cy as Number, angle as Float,
+                                  baseDist as Float, tipDist as Float, halfWidth as Float,
+                                  filled as Boolean) as Void {
+        var base = polar(cx, cy, angle, baseDist);
+        var dx = Math.cos(angle) * halfWidth;
+        var dy = Math.sin(angle) * halfWidth;
+        var points = [
+            [base[0] - dx, base[1] - dy],
+            [base[0] + dx, base[1] + dy],
+            polar(cx, cy, angle, tipDist)
+        ];
+        if (filled) {
+            dc.fillPolygon(points);
+        } else {
+            dc.setPenWidth(2);
+            dc.drawLine(points[0][0], points[0][1], points[1][0], points[1][1]);
+            dc.drawLine(points[1][0], points[1][1], points[2][0], points[2][1]);
+            dc.drawLine(points[2][0], points[2][1], points[0][0], points[0][1]);
+            dc.setPenWidth(1);
+        }
     }
 
     // Tapered hand: a kite with a short tail behind the center.
