@@ -36,8 +36,8 @@ class Submarine24View extends WatchUi.WatchFace {
     private const STEPS_RING_START = 320;
     private const STEPS_RING_END = 300;
     private const STEPS_RING_ANGLE = 60.0; // position on the dial, clockwise from the top
-    private const STEPS_RING_DISTANCE = 0.42; // from the center, in radius units
-    private const STEPS_RING_RADIUS = 0.12;
+    private const STEPS_RING_DISTANCE = 0.40; // from the center, in radius units
+    private const STEPS_RING_RADIUS = 0.16;
     private const STEPS_RING_WIDTH = 4;
 
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
@@ -221,6 +221,11 @@ class Submarine24View extends WatchUi.WatchFace {
                 (STEPS_RING_START - sweep + 360).toNumber() % 360);
         }
         dc.setPenWidth(1);
+
+        // Step count in the middle of the ring.
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(x, y, _oddFont, steps.toString(),
+            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
         // Footprints in the gap of the ring, halfway between its two ends.
         var gapAngle = (STEPS_RING_START + STEPS_RING_END) / 2.0 * Math.PI / 180.0;
