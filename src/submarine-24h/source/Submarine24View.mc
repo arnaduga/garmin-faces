@@ -67,8 +67,8 @@ class Submarine24View extends WatchUi.WatchFace {
     }
 
     // Point at `angle` (clockwise from the top) and `distance` from the center.
-    private function polar(cx as Number, cy as Number, angle as Float, distance as Float) as Array<Number> {
-        return [cx + distance * Math.sin(angle), cy - distance * Math.cos(angle)];
+    private function polar(cx as Number, cy as Number, angle as Float, distance as Float) as Graphics.Point2D {
+        return [cx + distance * Math.sin(angle), cy - distance * Math.cos(angle)] as Graphics.Point2D;
     }
 
     private function drawMinuteTrack(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
@@ -112,10 +112,10 @@ class Submarine24View extends WatchUi.WatchFace {
         var dx = Math.cos(angle) * halfWidth;
         var dy = Math.sin(angle) * halfWidth;
         var points = [
-            [base[0] - dx, base[1] - dy],
-            [base[0] + dx, base[1] + dy],
+            [base[0] - dx, base[1] - dy] as Graphics.Point2D,
+            [base[0] + dx, base[1] + dy] as Graphics.Point2D,
             polar(cx, cy, angle, tipDist)
-        ];
+        ] as Array<Graphics.Point2D>;
         if (filled) {
             dc.fillPolygon(points);
         } else {
@@ -134,6 +134,6 @@ class Submarine24View extends WatchUi.WatchFace {
         var left = polar(cx, cy, angle - 0.5 * Math.PI, width / 2);
         var right = polar(cx, cy, angle + 0.5 * Math.PI, width / 2);
         var back = polar(cx, cy, angle + Math.PI, tail);
-        dc.fillPolygon([back, left, tip, right]);
+        dc.fillPolygon([back, left, tip, right] as Array<Graphics.Point2D>);
     }
 }
