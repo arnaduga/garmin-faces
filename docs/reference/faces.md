@@ -14,5 +14,23 @@ Inspired by Russian submarine watches.
 - The red seconds hand is only drawn in high-power mode (not while the display is dimmed).
 - Battery: a ring on the outer edge (green, orange below 30 %, red below 15 %) filling clockwise from the 1 h position (0 %) to the 23 h position (100 %), with rounded ends; the remaining charge is shown at the top, preceded by a lightning bolt.
 - Steps: a small blue ring above the center (steps / daily goal), running clockwise from 335° to 285° (degrees clockwise from the top), with the step count in the middle and a footprint icon in its gap. Tunable through the `STEPS_*` constants in `Submarine24View.mc`.
-- Date: weekday, then day and month in full (no year), on two lines under the center. Always in French: the names are in `resources/strings/date.xml`, not taken from the watch language.
+- Date: weekday, then day and month in full (no year), on two lines under the center. French by default, or English (setting). The names are in `resources/strings/date.xml`, not taken from the watch language.
 - Fonts: the numerals and small texts use vector fonts (`RobotoCondensedBold` for even hours, `RobotoCondensedRegular` for the rest, sizes relative to the screen width), with a built-in font as fallback. The face names available on a device are listed in its `simulator.json`, in the SDK folder (`Devices/<device>/`).
+
+### Settings (Submarine 24h)
+
+| Setting | Type | Default |
+|---|---|---|
+| Hands color | color | silver |
+| Seconds hand color | color | red |
+| Odd-hour marks color | color | orange |
+| Steps ring color | color | blue |
+| Battery ring color | color | green |
+| Battery orange below / red below (%) | number | 30 / 15 |
+| Show seconds hand, date, steps, battery, odd-hour numerals | on/off | on |
+| Midnight (24) at the top | on/off | on |
+| Date language | French / English | French |
+
+The battery ring and its label always stay at the top: with midnight at the bottom, the ring no longer lines up with the 1 h and 23 h marks.
+The settings screen is in English. Values are read by `Config` (`source/Config.mc`).
+

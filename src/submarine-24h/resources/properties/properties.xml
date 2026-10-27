@@ -1,0 +1,16 @@
+<properties>
+    <property id="HandsColor" type="number">15263976</property>
+    <property id="SecondsColor" type="number">16711680</property>
+    <property id="OddMarkColor" type="number">16733440</property>
+    <property id="StepsColor" type="number">43775</property>
+    <property id="BatteryColor" type="number">65280</property>
+    <property id="ShowSeconds" type="boolean">true</property>
+    <property id="ShowDate" type="boolean">true</property>
+    <property id="ShowSteps" type="boolean">true</property>
+    <property id="ShowBattery" type="boolean">true</property>
+    <property id="ShowOddNumerals" type="boolean">true</property>
+    <property id="MidnightAtTop" type="boolean">true</property>
+    <property id="BatteryOrangeBelow" type="number">30</property>
+    <property id="BatteryRedBelow" type="number">15</property>
+    <property id="DateLanguage" type="number">0</property>
+</properties>

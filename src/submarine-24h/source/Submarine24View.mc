@@ -14,9 +14,6 @@ class Submarine24View extends WatchUi.WatchFace {
 
     private const NUMERAL_COLOR = 0xDDDDDD;
     private const ODD_NUMERAL_COLOR = 0x777777;
-    private const ODD_MARK_COLOR = Graphics.COLOR_ORANGE;
-    private const HAND_COLOR = 0xE8E8E8;
-    private const SECONDS_COLOR = Graphics.COLOR_RED;
 
     // Battery ring: sits on the outer edge, with a gap at the top for the label.
     private const RING_RADIUS = 0.965;
@@ -38,7 +35,6 @@ class Submarine24View extends WatchUi.WatchFace {
     // Steps gauge: small ring above the center, with a footprint icon in its gap.
     // Angles are in degrees clockwise from the top (0° = 12 o'clock); the ring runs
     // clockwise from STEPS_RING_START to STEPS_RING_END, leaving a gap for the icon.
-    private const STEPS_COLOR = 0x00AAFF;
     private const STEPS_RING_START = 335;
     private const STEPS_RING_END = 285;
     private const STEPS_RING_ANGLE = 0.0; // position on the dial, clockwise from the top
@@ -50,16 +46,24 @@ class Submarine24View extends WatchUi.WatchFace {
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _dateFont as Graphics.FontType = Graphics.FONT_TINY;
-    // Date: weekday, then day and month, in French whatever the watch language is
-    // (the names come from resources/strings/date.xml).
+    // Date: weekday, then day and month, in French or English (user setting, independent of
+    // the watch language); the names come from resources/strings/date.xml.
     private const DATE_Y = 0.28; // first line, below the center, in radius units
 
     private var _dayNames as Array<String> = [];
     private var _monthNames as Array<String> = [];
     private var _lowPower as Boolean = false;
+    private var _config as Config = new Config();
 
     function initialize() {
         WatchFace.initialize();
+        _config.load();
+    }
+
+    // Called by the application when the user changes the settings.
+    function reloadSettings() as Void {
+        _config.load();
+        loadDateNames();
     }
 
     function onLayout(dc as Dc) as Void {
@@ -68,12 +72,24 @@ class Submarine24View extends WatchUi.WatchFace {
         _labelFont = loadFont(dc, SMALL_FONT_FACES, LABEL_FONT_SIZE_RATIO, Graphics.FONT_XTINY);
         _dateFont = loadFont(dc, SMALL_FONT_FACES, DATE_FONT_SIZE_RATIO, Graphics.FONT_TINY);
 
-        var days = [Rez.Strings.Day1, Rez.Strings.Day2, Rez.Strings.Day3, Rez.Strings.Day4,
-                    Rez.Strings.Day5, Rez.Strings.Day6, Rez.Strings.Day7];
-        var months = [Rez.Strings.Month1, Rez.Strings.Month2, Rez.Strings.Month3,
-                      Rez.Strings.Month4, Rez.Strings.Month5, Rez.Strings.Month6,
-                      Rez.Strings.Month7, Rez.Strings.Month8, Rez.Strings.Month9,
-                      Rez.Strings.Month10, Rez.Strings.Month11, Rez.Strings.Month12];
+        loadDateNames();
+    }
+
+    private function loadDateNames() as Void {
+        var days = [Rez.Strings.FrDay1, Rez.Strings.FrDay2, Rez.Strings.FrDay3, Rez.Strings.FrDay4,
+                    Rez.Strings.FrDay5, Rez.Strings.FrDay6, Rez.Strings.FrDay7];
+        var months = [Rez.Strings.FrMonth1, Rez.Strings.FrMonth2, Rez.Strings.FrMonth3,
+                      Rez.Strings.FrMonth4, Rez.Strings.FrMonth5, Rez.Strings.FrMonth6,
+                      Rez.Strings.FrMonth7, Rez.Strings.FrMonth8, Rez.Strings.FrMonth9,
+                      Rez.Strings.FrMonth10, Rez.Strings.FrMonth11, Rez.Strings.FrMonth12];
+        if (_config.dateLanguage == Config.LANGUAGE_ENGLISH) {
+            days = [Rez.Strings.EnDay1, Rez.Strings.EnDay2, Rez.Strings.EnDay3, Rez.Strings.EnDay4,
+                    Rez.Strings.EnDay5, Rez.Strings.EnDay6, Rez.Strings.EnDay7];
+            months = [Rez.Strings.EnMonth1, Rez.Strings.EnMonth2, Rez.Strings.EnMonth3,
+                      Rez.Strings.EnMonth4, Rez.Strings.EnMonth5, Rez.Strings.EnMonth6,
+                      Rez.Strings.EnMonth7, Rez.Strings.EnMonth8, Rez.Strings.EnMonth9,
+                      Rez.Strings.EnMonth10, Rez.Strings.EnMonth11, Rez.Strings.EnMonth12];
+        }
         _dayNames = [];
         for (var i = 0; i < days.size(); i++) {
             _dayNames.add(WatchUi.loadResource(days[i]) as String);
@@ -121,21 +137,27 @@ class Submarine24View extends WatchUi.WatchFace {
 
         drawMinuteTrack(dc, cx, cy, radius);
         drawHourDial(dc, cx, cy, radius);
-        drawBattery(dc, cx, cy, radius);
-        drawSteps(dc, cx, cy, radius);
-        drawDate(dc, cx, cy, radius);
+        if (_config.showBattery) {
+            drawBattery(dc, cx, cy, radius);
+        }
+        if (_config.showSteps) {
+            drawSteps(dc, cx, cy, radius);
+        }
+        if (_config.showDate) {
+            drawDate(dc, cx, cy, radius);
+        }
 
         var clock = System.getClockTime();
         var hours = clock.hour + clock.min / 60.0;
 
-        dc.setColor(HAND_COLOR, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_config.handsColor, Graphics.COLOR_TRANSPARENT);
         drawHand(dc, cx, cy, hourAngle(hours), radius * 0.55, radius * 0.09, radius * 0.1);
         drawHand(dc, cx, cy, (clock.min + clock.sec / 60.0) / 60.0 * 2 * Math.PI,
             radius * 0.88, radius * 0.06, radius * 0.1);
 
         // The seconds hand is only drawn in high-power mode (saves AMOLED power).
-        if (!_lowPower) {
-            dc.setColor(SECONDS_COLOR, Graphics.COLOR_TRANSPARENT);
+        if (!_lowPower && _config.showSeconds) {
+            dc.setColor(_config.secondsColor, Graphics.COLOR_TRANSPARENT);
             var angle = clock.sec / 60.0 * 2 * Math.PI;
             var from = polar(cx, cy, angle + Math.PI, radius * 0.18);
             var to = polar(cx, cy, angle, radius * 0.9);
@@ -143,12 +165,15 @@ class Submarine24View extends WatchUi.WatchFace {
             dc.drawLine(from[0], from[1], to[0], to[1]);
             dc.setPenWidth(1);
             dc.fillCircle(cx, cy, radius * 0.035);
+        } else {
+            dc.fillCircle(cx, cy, radius * 0.035);
         }
     }
 
     // Angle (radians, clockwise from the top) of `hours` on the 24h dial.
     private function hourAngle(hours as Float) as Float {
-        return hours / 24.0 * 2 * Math.PI;
+        var offset = _config.midnightAtTop ? 0.0 : Math.PI;
+        return offset + hours / 24.0 * 2 * Math.PI;
     }
 
     // Point at `angle` (clockwise from the top) and `distance` from the center.
@@ -160,7 +185,7 @@ class Submarine24View extends WatchUi.WatchFace {
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         for (var m = 0; m < 60; m++) {
             var degrees = m * 6;
-            if (degrees <= RING_GAP_DEG || degrees >= 360 - RING_GAP_DEG) {
+            if (_config.showBattery && (degrees <= RING_GAP_DEG || degrees >= 360 - RING_GAP_DEG)) {
                 continue;
             }
             var angle = m / 60.0 * 2 * Math.PI;
@@ -185,14 +210,16 @@ class Submarine24View extends WatchUi.WatchFace {
                 dc.drawText(at[0], at[1], _evenFont, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             } else {
-                var at = polar(cx, cy, angle, radius * 0.77);
-                dc.setColor(ODD_NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(at[0], at[1], _oddFont, h.toString(),
-                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                if (_config.showOddNumerals) {
+                    var at = polar(cx, cy, angle, radius * 0.77);
+                    dc.setColor(ODD_NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
+                    dc.drawText(at[0], at[1], _oddFont, h.toString(),
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                }
                 // Odd-hour mark: a thick colored tick on the minute track, bolder than the minute ticks.
                 var from = polar(cx, cy, angle, radius * 0.875);
                 var to = polar(cx, cy, angle, radius * 0.94);
-                dc.setColor(ODD_MARK_COLOR, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(_config.oddMarkColor, Graphics.COLOR_TRANSPARENT);
                 dc.setPenWidth(4);
                 dc.drawLine(from[0], from[1], to[0], to[1]);
                 dc.setPenWidth(1);
@@ -218,10 +245,10 @@ class Submarine24View extends WatchUi.WatchFace {
         drawRoundCap(dc, cx, cy, ringRadius, from);
         drawRoundCap(dc, cx, cy, ringRadius, 360 - from);
         if (span >= 1) {
-            var color = Graphics.COLOR_GREEN;
-            if (level < 15) {
+            var color = _config.batteryColor;
+            if (level < _config.batteryRedBelow) {
                 color = Graphics.COLOR_RED;
-            } else if (level < 30) {
+            } else if (level < _config.batteryOrangeBelow) {
                 color = Graphics.COLOR_ORANGE;
             }
             dc.setColor(color, Graphics.COLOR_TRANSPARENT);
@@ -268,7 +295,7 @@ class Submarine24View extends WatchUi.WatchFace {
         dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
         dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, arcStart, arcEnd);
         if (sweep >= 1) {
-            dc.setColor(STEPS_COLOR, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(_config.stepsColor, Graphics.COLOR_TRANSPARENT);
             dc.drawArc(x, y, ringRadius, Graphics.ARC_CLOCKWISE, arcStart,
                 (arcStart - sweep + 360).toNumber() % 360);
         }
@@ -281,7 +308,7 @@ class Submarine24View extends WatchUi.WatchFace {
 
         // Footprints in the gap of the ring, halfway between its two ends.
         var gapAngle = (STEPS_RING_START + STEPS_RING_END) / 2.0 * Math.PI / 180.0;
-        dc.setColor(STEPS_COLOR, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_config.stepsColor, Graphics.COLOR_TRANSPARENT);
         drawFootprint(dc, x + (ringRadius * Math.sin(gapAngle)).toNumber(),
             y - (ringRadius * Math.cos(gapAngle)).toNumber());
     }

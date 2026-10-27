@@ -1,23 +1,44 @@
 <strings>
     <!-- Day 1 is Sunday, as in Gregorian.info().day_of_week -->
-    <string id="Day1">dimanche</string>
-    <string id="Day2">lundi</string>
-    <string id="Day3">mardi</string>
-    <string id="Day4">mercredi</string>
-    <string id="Day5">jeudi</string>
-    <string id="Day6">vendredi</string>
-    <string id="Day7">samedi</string>
+    <string id="FrDay1">dimanche</string>
+    <string id="FrDay2">lundi</string>
+    <string id="FrDay3">mardi</string>
+    <string id="FrDay4">mercredi</string>
+    <string id="FrDay5">jeudi</string>
+    <string id="FrDay6">vendredi</string>
+    <string id="FrDay7">samedi</string>
 
-    <string id="Month1">janvier</string>
-    <string id="Month2">février</string>
-    <string id="Month3">mars</string>
-    <string id="Month4">avril</string>
-    <string id="Month5">mai</string>
-    <string id="Month6">juin</string>
-    <string id="Month7">juillet</string>
-    <string id="Month8">août</string>
-    <string id="Month9">septembre</string>
-    <string id="Month10">octobre</string>
-    <string id="Month11">novembre</string>
-    <string id="Month12">décembre</string>
+    <string id="FrMonth1">janvier</string>
+    <string id="FrMonth2">février</string>
+    <string id="FrMonth3">mars</string>
+    <string id="FrMonth4">avril</string>
+    <string id="FrMonth5">mai</string>
+    <string id="FrMonth6">juin</string>
+    <string id="FrMonth7">juillet</string>
+    <string id="FrMonth8">août</string>
+    <string id="FrMonth9">septembre</string>
+    <string id="FrMonth10">octobre</string>
+    <string id="FrMonth11">novembre</string>
+    <string id="FrMonth12">décembre</string>
+
+    <string id="EnDay1">Sunday</string>
+    <string id="EnDay2">Monday</string>
+    <string id="EnDay3">Tuesday</string>
+    <string id="EnDay4">Wednesday</string>
+    <string id="EnDay5">Thursday</string>
+    <string id="EnDay6">Friday</string>
+    <string id="EnDay7">Saturday</string>
+
+    <string id="EnMonth1">January</string>
+    <string id="EnMonth2">February</string>
+    <string id="EnMonth3">March</string>
+    <string id="EnMonth4">April</string>
+    <string id="EnMonth5">May</string>
+    <string id="EnMonth6">June</string>
+    <string id="EnMonth7">July</string>
+    <string id="EnMonth8">August</string>
+    <string id="EnMonth9">September</string>
+    <string id="EnMonth10">October</string>
+    <string id="EnMonth11">November</string>
+    <string id="EnMonth12">December</string>
 </strings>

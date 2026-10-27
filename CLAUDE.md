@@ -8,5 +8,5 @@ Watch faces for the Garmin Vivoactive 6 (Connect IQ, Monkey C), developed inside
 - One face per directory under `src/<face-name>/` (with its own `manifest.xml` and `monkey.jungle`).
 - Never commit `.keys/` (developer signing key).
 - Build: `scripts/build.sh src/<face-name>`.
-- Exception: text displayed on the watch faces is in French (the user's choice), e.g. the date of `submarine-24h`.
+- Exception: the date of `submarine-24h` is French by default (user setting: French or English). The settings screen is in English.
 
