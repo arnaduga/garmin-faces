@@ -14,3 +14,7 @@ bin/
 GARMIN/
 
 .DS_Store
+
+# Core dumps
+core
+core.*
