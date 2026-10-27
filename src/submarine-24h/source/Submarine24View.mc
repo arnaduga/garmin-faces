@@ -42,8 +42,8 @@ class Submarine24View extends WatchUi.WatchFace {
     private const STEPS_RING_START = 335;
     private const STEPS_RING_END = 285;
     private const STEPS_RING_ANGLE = 60.0; // position on the dial, clockwise from the top
-    private const STEPS_RING_DISTANCE = 0.40; // from the center, in radius units
-    private const STEPS_RING_RADIUS = 0.16;
+    private const STEPS_RING_DISTANCE = 0.38; // from the center, in radius units
+    private const STEPS_RING_RADIUS = 0.19;
     private const STEPS_RING_WIDTH = 4;
 
     private var _evenFont as Graphics.FontType = Graphics.FONT_TINY;
