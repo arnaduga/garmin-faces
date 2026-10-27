@@ -107,7 +107,7 @@ class Submarine24View extends WatchUi.WatchFace {
                 drawTriangle(dc, cx, cy, angle, radius * 0.6, radius * 0.74, radius * 0.06, false);
             } else if (h % 2 == 0) {
                 var at = polar(cx, cy, angle, radius * 0.7);
-                dc.drawText(at[0], at[1], Graphics.FONT_MEDIUM, h.toString(),
+                dc.drawText(at[0], at[1], Graphics.FONT_SMALL, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             } else {
                 var at = polar(cx, cy, angle, radius * 0.58);
