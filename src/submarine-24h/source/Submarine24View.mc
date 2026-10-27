@@ -19,9 +19,9 @@ class Submarine24View extends WatchUi.WatchFace {
     // Battery ring: sits on the outer edge, with a gap at the top for the label.
     private const RING_RADIUS = 0.965;
     private const RING_WIDTH = 8;
-    private const RING_GAP_DEG = 12;
+    private const RING_GAP_DEG = 15; // the ring spans 1 h (15°) to 23 h (345°)
     // Label distance from the center: inside the ring so the text is not clipped by the screen edge.
-    private const LABEL_RADIUS = 0.885;
+    private const LABEL_RADIUS = 0.91;
 
     // Small texts use a vector font (size relative to the screen width) so they can be
     // smaller than the smallest built-in font; FONT_XTINY is the fallback.
@@ -167,13 +167,20 @@ class Submarine24View extends WatchUi.WatchFace {
     private function drawBattery(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
         var level = System.getSystemStats().battery;
         var ringRadius = radius * RING_RADIUS;
-        // drawArc: 0° is 3 o'clock, angles grow counter-clockwise; the top is 90°.
-        var start = 90 - RING_GAP_DEG;
-        var span = (360 - 2 * RING_GAP_DEG) * level / 100.0;
+        // The rounded caps stick out by half the ring width: inset the arc by that angle
+        // so the bar visually spans exactly from the 1 h to the 23 h position.
+        var capDeg = (RING_WIDTH / 2.0) / ringRadius * 180.0 / Math.PI;
+        var from = RING_GAP_DEG + capDeg; // degrees clockwise from the top
+        var span = (360 - 2 * from) * level / 100.0;
+        // Dc.drawArc angles: 0° is 3 o'clock and they grow counter-clockwise.
+        var arcStart = (90 - from + 0.5).toNumber();
+        var arcEnd = (90 + from + 0.5).toNumber();
 
         dc.setPenWidth(RING_WIDTH);
         dc.setColor(0x303030, Graphics.COLOR_TRANSPARENT);
-        dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, start, 90 + RING_GAP_DEG);
+        dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, arcStart, arcEnd);
+        drawRoundCap(dc, cx, cy, ringRadius, from);
+        drawRoundCap(dc, cx, cy, ringRadius, 360 - from);
         if (span >= 1) {
             var color = Graphics.COLOR_GREEN;
             if (level < 15) {
@@ -182,7 +189,10 @@ class Submarine24View extends WatchUi.WatchFace {
                 color = Graphics.COLOR_ORANGE;
             }
             dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-            dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, start, (start - span + 360).toNumber() % 360);
+            dc.drawArc(cx, cy, ringRadius, Graphics.ARC_CLOCKWISE, arcStart,
+                (arcStart - span + 360 + 0.5).toNumber() % 360);
+            drawRoundCap(dc, cx, cy, ringRadius, from);
+            drawRoundCap(dc, cx, cy, ringRadius, from + span);
         }
         dc.setPenWidth(1);
 
@@ -246,6 +256,13 @@ class Submarine24View extends WatchUi.WatchFace {
         dc.fillEllipse(x - 3, y + 4, 1, 1);
         dc.fillEllipse(x + 3, y - 5, 2, 3);
         dc.fillEllipse(x + 3, y, 1, 1);
+    }
+
+    // Disk closing the end of a thick arc, at `degrees` clockwise from the top.
+    private function drawRoundCap(dc as Dc, cx as Number, cy as Number, ringRadius as Float,
+                                  degrees as Float) as Void {
+        var at = polar(cx, cy, degrees * Math.PI / 180.0, ringRadius);
+        dc.fillCircle(at[0], at[1], RING_WIDTH / 2);
     }
 
     // Small lightning bolt centered on (x, y).
