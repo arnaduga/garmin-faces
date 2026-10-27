@@ -22,10 +22,28 @@ class Submarine24View extends WatchUi.WatchFace {
     // Label distance from the center: inside the ring so the text is not clipped by the screen edge.
     private const LABEL_RADIUS = 0.885;
 
+    // Odd-hour numerals use a vector font (size in pixels, relative to the screen width)
+    // so they can be smaller than the smallest built-in font; FONT_XTINY is the fallback.
+    private const ODD_FONT_SIZE_RATIO = 0.042;
+    private const ODD_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular", "BionicRegular"];
+
+    private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
     private var _lowPower as Boolean = false;
 
     function initialize() {
         WatchFace.initialize();
+    }
+
+    function onLayout(dc as Dc) as Void {
+        if (Graphics has :getVectorFont) {
+            var font = Graphics.getVectorFont({
+                :face => ODD_FONT_FACES,
+                :size => (dc.getWidth() * ODD_FONT_SIZE_RATIO).toNumber()
+            });
+            if (font != null) {
+                _oddFont = font;
+            }
+        }
     }
 
     function onEnterSleep() as Void {
@@ -110,9 +128,9 @@ class Submarine24View extends WatchUi.WatchFace {
                 dc.drawText(at[0], at[1], Graphics.FONT_SMALL, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             } else {
-                var at = polar(cx, cy, angle, radius * 0.8);
+                var at = polar(cx, cy, angle, radius * 0.77);
                 dc.setColor(ODD_NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(at[0], at[1], Graphics.FONT_XTINY, h.toString(),
+                dc.drawText(at[0], at[1], _oddFont, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
                 // Odd-hour mark: a thick colored tick on the minute track, bolder than the minute ticks.
                 var from = polar(cx, cy, angle, radius * 0.875);
