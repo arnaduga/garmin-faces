@@ -35,16 +35,16 @@ class Submarine24View extends WatchUi.WatchFace {
     private const EVEN_FONT_FACES = ["RobotoCondensedBold", "RobotoCondensedRegular", "RobotoRegular"];
     private const SMALL_FONT_FACES = ["RobotoCondensedRegular", "RobotoRegular"];
 
-    // Steps gauge: small ring at about 2 o'clock, with a footprint icon in its gap.
+    // Steps gauge: small ring above the center, with a footprint icon in its gap.
     // Angles are in degrees clockwise from the top (0° = 12 o'clock); the ring runs
     // clockwise from STEPS_RING_START to STEPS_RING_END, leaving a gap for the icon.
     private const STEPS_COLOR = 0x00AAFF;
     private const STEPS_RING_START = 335;
     private const STEPS_RING_END = 285;
-    private const STEPS_RING_ANGLE = 60.0; // position on the dial, clockwise from the top
-    private const STEPS_RING_DISTANCE = 0.38; // from the center, in radius units
+    private const STEPS_RING_ANGLE = 0.0; // position on the dial, clockwise from the top
+    private const STEPS_RING_DISTANCE = 0.37; // from the center, in radius units
     private const STEPS_RING_RADIUS = 0.19;
-    private const STEPS_RING_WIDTH = 4;
+    private const STEPS_RING_WIDTH = 7;
 
     private var _evenFont as Graphics.FontType = Graphics.FONT_TINY;
     private var _oddFont as Graphics.FontType = Graphics.FONT_XTINY;
