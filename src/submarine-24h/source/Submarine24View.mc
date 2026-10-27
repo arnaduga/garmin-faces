@@ -10,6 +10,7 @@ import Toybox.WatchUi;
 class Submarine24View extends WatchUi.WatchFace {
 
     private const NUMERAL_COLOR = 0xDDDDDD;
+    private const ODD_NUMERAL_COLOR = 0x777777;
     private const HAND_COLOR = 0xE8E8E8;
     private const SECONDS_COLOR = Graphics.COLOR_RED;
 
@@ -95,8 +96,8 @@ class Submarine24View extends WatchUi.WatchFace {
     }
 
     private function drawHourDial(dc as Dc, cx as Number, cy as Number, radius as Number) as Void {
-        dc.setColor(NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
         for (var h = 1; h <= 24; h++) {
+            dc.setColor(NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
             var angle = hourAngle(h.toFloat());
             if (h == 12) {
                 // Noon: hollow triangle pointing outwards instead of a numeral.
@@ -107,8 +108,10 @@ class Submarine24View extends WatchUi.WatchFace {
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
             } else {
                 var at = polar(cx, cy, angle, radius * 0.58);
+                dc.setColor(ODD_NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(at[0], at[1], Graphics.FONT_XTINY, h.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+                dc.setColor(NUMERAL_COLOR, Graphics.COLOR_TRANSPARENT);
                 drawTriangle(dc, cx, cy, angle, radius * 0.79, radius * 0.85, radius * 0.025, true);
             }
         }
