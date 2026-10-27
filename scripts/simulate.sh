@@ -3,10 +3,12 @@
 # Usage: scripts/simulate.sh <project-dir> [device]   (run inside scripts/shell.sh)
 set -euo pipefail
 
-PROJECT="${1:?usage: simulate.sh <project-dir> [device]}"
+# SIM_ONLY=1 starts the simulator without loading any app (to debug crashes).
+PROJECT="${1:-}"
+[ -n "$PROJECT" ] || [ -n "${SIM_ONLY:-}" ] || { echo "usage: simulate.sh <project-dir> [device]" >&2; exit 1; }
 DEVICE="${2:-vivoactive6}"
 
-scripts/build.sh "$PROJECT" "$DEVICE"
+[ -n "${SIM_ONLY:-}" ] || scripts/build.sh "$PROJECT" "$DEVICE"
 export PATH="$(connect-iq-sdk-manager sdk current-path --bin):$PATH"
 
 export DISPLAY=:99
@@ -26,5 +28,5 @@ websockify --web /usr/share/novnc 6080 localhost:5900 >/dev/null 2>&1 &
 connectiq &
 sleep 5
 echo "Open http://localhost:6080/vnc.html and click Connect. Ctrl+C to stop."
-monkeydo "build/$(basename "$PROJECT").prg" "$DEVICE"
+[ -n "${SIM_ONLY:-}" ] || monkeydo "build/$(basename "$PROJECT").prg" "$DEVICE"
 wait
