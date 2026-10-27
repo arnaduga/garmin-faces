@@ -48,7 +48,7 @@ class Submarine24View extends WatchUi.WatchFace {
     private var _labelFont as Graphics.FontType = Graphics.FONT_XTINY;
     // Date: weekday, then day and month, in French whatever the watch language is
     // (the names come from resources/strings/date.xml).
-    private const DATE_Y = 0.2; // first line, below the center, in radius units
+    private const DATE_Y = 0.28; // first line, below the center, in radius units
 
     private var _dayNames as Array<String> = [];
     private var _monthNames as Array<String> = [];
