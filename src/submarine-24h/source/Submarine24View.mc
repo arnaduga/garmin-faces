@@ -204,7 +204,10 @@ class Submarine24View extends WatchUi.WatchFace {
         var info = ActivityMonitor.getInfo();
         var steps = (info.steps != null) ? info.steps : 0;
         var goal = (info.stepGoal != null) ? info.stepGoal : 0;
-        var ratio = (goal > 0) ? Math.fmin(steps.toFloat() / goal, 1.0) : 0.0;
+        var ratio = (goal > 0) ? steps.toFloat() / goal : 0.0;
+        if (ratio > 1.0) {
+            ratio = 1.0;
+        }
 
         var center = polar(cx, cy, STEPS_RING_ANGLE * Math.PI / 180.0, radius * STEPS_RING_DISTANCE);
         var x = center[0].toNumber();
