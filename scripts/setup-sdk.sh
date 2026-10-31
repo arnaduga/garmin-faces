@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# Install the Connect IQ SDK, the vivoactive6 device files and a developer key.
+# Install the Connect IQ SDK, the device files and a developer key.
 set -euo pipefail
 
 SDK_VERSION="${SDK_VERSION:-latest}"
-DEVICE="${DEVICE:-vivoactive6}"
+# Space-separated device ids; by default every device listed in a face manifest.
+DEVICES="${DEVICES:-${DEVICE:-$(grep -rhoE 'iq:product id="[^"]+"' src/*/manifest.xml | sed -E 's/.*id="([^"]+)"/\1/' | sort -u | tr '\n' ' ')}}"
 KEY="${DEVELOPER_KEY:-.keys/developer_key.der}"
 
 connect-iq-sdk-manager agreement view
@@ -15,7 +16,9 @@ if [ "$SDK_VERSION" = "latest" ]; then
 else
   connect-iq-sdk-manager sdk set "$SDK_VERSION"
 fi
-connect-iq-sdk-manager device download -d "$DEVICE" --include-fonts
+for device in $DEVICES; do
+  connect-iq-sdk-manager device download -d "$device" --include-fonts
+done
 
 if [ ! -f "$KEY" ]; then
   mkdir -p "$(dirname "$KEY")"

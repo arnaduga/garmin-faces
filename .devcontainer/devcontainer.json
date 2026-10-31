@@ -1,6 +1,7 @@
 {
   "name": "garmin-faces",
-  "build": { "dockerfile": "Dockerfile" },
+  // The image must be built for the same platform as the container (see runArgs).
+  "build": { "dockerfile": "Dockerfile", "options": ["--platform=linux/amd64"] },
   // The Connect IQ simulator is x86_64 only: emulate it on Apple Silicon.
   "runArgs": ["--platform=linux/amd64"],
   "remoteUser": "vscode",

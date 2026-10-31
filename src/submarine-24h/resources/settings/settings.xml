@@ -12,6 +12,8 @@
             <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
             <listEntry value="8947848">@Strings.ColorGrey</listEntry>
             <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.SecondsColor" title="@Strings.SecondsColorTitle">
@@ -27,6 +29,8 @@
             <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
             <listEntry value="8947848">@Strings.ColorGrey</listEntry>
             <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.OddMarkColor" title="@Strings.OddMarkColorTitle">
@@ -42,6 +46,8 @@
             <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
             <listEntry value="8947848">@Strings.ColorGrey</listEntry>
             <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.StepsColor" title="@Strings.StepsColorTitle">
@@ -57,6 +63,59 @@
             <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
             <listEntry value="8947848">@Strings.ColorGrey</listEntry>
             <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
+        </settingConfig>
+    </setting>
+    <setting propertyKey="@Properties.HeartColor" title="@Strings.HeartColorTitle">
+        <settingConfig type="list">
+            <listEntry value="15263976">@Strings.ColorSilver</listEntry>
+            <listEntry value="16777215">@Strings.ColorWhite</listEntry>
+            <listEntry value="16733440">@Strings.ColorOrange</listEntry>
+            <listEntry value="16711680">@Strings.ColorRed</listEntry>
+            <listEntry value="65280">@Strings.ColorGreen</listEntry>
+            <listEntry value="43775">@Strings.ColorBlue</listEntry>
+            <listEntry value="65535">@Strings.ColorCyan</listEntry>
+            <listEntry value="16776960">@Strings.ColorYellow</listEntry>
+            <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
+            <listEntry value="8947848">@Strings.ColorGrey</listEntry>
+            <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
+        </settingConfig>
+    </setting>
+    <setting propertyKey="@Properties.StressColor" title="@Strings.StressColorTitle">
+        <settingConfig type="list">
+            <listEntry value="15263976">@Strings.ColorSilver</listEntry>
+            <listEntry value="16777215">@Strings.ColorWhite</listEntry>
+            <listEntry value="16733440">@Strings.ColorOrange</listEntry>
+            <listEntry value="16711680">@Strings.ColorRed</listEntry>
+            <listEntry value="65280">@Strings.ColorGreen</listEntry>
+            <listEntry value="43775">@Strings.ColorBlue</listEntry>
+            <listEntry value="65535">@Strings.ColorCyan</listEntry>
+            <listEntry value="16776960">@Strings.ColorYellow</listEntry>
+            <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
+            <listEntry value="8947848">@Strings.ColorGrey</listEntry>
+            <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
+        </settingConfig>
+    </setting>
+    <setting propertyKey="@Properties.ActiveColor" title="@Strings.ActiveColorTitle">
+        <settingConfig type="list">
+            <listEntry value="15263976">@Strings.ColorSilver</listEntry>
+            <listEntry value="16777215">@Strings.ColorWhite</listEntry>
+            <listEntry value="16733440">@Strings.ColorOrange</listEntry>
+            <listEntry value="16711680">@Strings.ColorRed</listEntry>
+            <listEntry value="65280">@Strings.ColorGreen</listEntry>
+            <listEntry value="43775">@Strings.ColorBlue</listEntry>
+            <listEntry value="65535">@Strings.ColorCyan</listEntry>
+            <listEntry value="16776960">@Strings.ColorYellow</listEntry>
+            <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
+            <listEntry value="8947848">@Strings.ColorGrey</listEntry>
+            <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.BatteryColor" title="@Strings.BatteryColorTitle">
@@ -72,18 +131,14 @@
             <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
             <listEntry value="8947848">@Strings.ColorGrey</listEntry>
             <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.ShowSeconds" title="@Strings.ShowSecondsTitle">
         <settingConfig type="boolean" />
     </setting>
     <setting propertyKey="@Properties.ShowDate" title="@Strings.ShowDateTitle">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.ShowSteps" title="@Strings.ShowStepsTitle">
-        <settingConfig type="boolean" />
-    </setting>
-    <setting propertyKey="@Properties.ShowBattery" title="@Strings.ShowBatteryTitle">
         <settingConfig type="boolean" />
     </setting>
     <setting propertyKey="@Properties.ShowOddNumerals" title="@Strings.ShowOddNumeralsTitle">
@@ -104,6 +159,36 @@
             <listEntry value="1">@Strings.LanguageEnglish</listEntry>
         </settingConfig>
     </setting>
+    <setting propertyKey="@Properties.GaugeTop" title="@Strings.GaugeTopTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.GaugeNone</listEntry>
+            <listEntry value="1">@Strings.GaugeBattery</listEntry>
+            <listEntry value="2">@Strings.GaugeSteps</listEntry>
+            <listEntry value="3">@Strings.GaugeHeart</listEntry>
+            <listEntry value="4">@Strings.GaugeStress</listEntry>
+            <listEntry value="5">@Strings.GaugeActive</listEntry>
+        </settingConfig>
+    </setting>
+    <setting propertyKey="@Properties.GaugeRight" title="@Strings.GaugeRightTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.GaugeNone</listEntry>
+            <listEntry value="1">@Strings.GaugeBattery</listEntry>
+            <listEntry value="2">@Strings.GaugeSteps</listEntry>
+            <listEntry value="3">@Strings.GaugeHeart</listEntry>
+            <listEntry value="4">@Strings.GaugeStress</listEntry>
+            <listEntry value="5">@Strings.GaugeActive</listEntry>
+        </settingConfig>
+    </setting>
+    <setting propertyKey="@Properties.GaugeLeft" title="@Strings.GaugeLeftTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.GaugeNone</listEntry>
+            <listEntry value="1">@Strings.GaugeBattery</listEntry>
+            <listEntry value="2">@Strings.GaugeSteps</listEntry>
+            <listEntry value="3">@Strings.GaugeHeart</listEntry>
+            <listEntry value="4">@Strings.GaugeStress</listEntry>
+            <listEntry value="5">@Strings.GaugeActive</listEntry>
+        </settingConfig>
+    </setting>
     <setting propertyKey="@Properties.HandStyle" title="@Strings.HandStyleTitle">
         <settingConfig type="list">
             <listEntry value="0">@Strings.HandStyleClassic</listEntry>
@@ -113,10 +198,18 @@
             <listEntry value="4">@Strings.HandStyleSkeleton</listEntry>
             <listEntry value="5">@Strings.HandStyleAlpha</listEntry>
             <listEntry value="6">@Strings.HandStyleBreguet</listEntry>
-            <listEntry value="7">@Strings.HandStyleSyringe</listEntry>
-            <listEntry value="8">@Strings.HandStyleArrow</listEntry>
-            <listEntry value="9">@Strings.HandStyleLeaf</listEntry>
-            <listEntry value="10">@Strings.HandStylePencil</listEntry>
+            <listEntry value="7">@Strings.HandStyleArrow</listEntry>
+            <listEntry value="8">@Strings.HandStyleLeaf</listEntry>
+            <listEntry value="9">@Strings.HandStylePencil</listEntry>
+            <listEntry value="10">@Strings.HandStyleGhost</listEntry>
+            <listEntry value="11">@Strings.HandStyleGlass</listEntry>
+            <listEntry value="12">@Strings.HandStyleNeon</listEntry>
+            <listEntry value="13">@Strings.HandStyleTwoTone</listEntry>
+            <listEntry value="14">@Strings.HandStyleSword</listEntry>
+            <listEntry value="15">@Strings.HandStyleMercedes</listEntry>
+            <listEntry value="16">@Strings.HandStylePearls</listEntry>
+            <listEntry value="17">@Strings.HandStyleComet</listEntry>
+            <listEntry value="18">@Strings.HandStyleBubble</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.ShowDayNight" title="@Strings.ShowDayNightTitle">
@@ -135,6 +228,8 @@
             <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
             <listEntry value="8947848">@Strings.ColorGrey</listEntry>
             <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.NightColor" title="@Strings.NightColorTitle">
@@ -150,6 +245,8 @@
             <listEntry value="16711935">@Strings.ColorMagenta</listEntry>
             <listEntry value="8947848">@Strings.ColorGrey</listEntry>
             <listEntry value="1849976">@Strings.ColorNavy</listEntry>
+            <listEntry value="14195499">@Strings.ColorAmber</listEntry>
+            <listEntry value="3158064">@Strings.ColorDarkGrey</listEntry>
         </settingConfig>
     </setting>
 </settings>

@@ -20,8 +20,8 @@ The face reads its settings from `src/submarine-24h/resources/properties/propert
 
 ## Preview the hand styles
 
-1. Run `scripts/simulate.sh src/submarine-24h` (this rebuilds the face).
-2. In the simulator, edit the application settings and change **Hand style**; the face is redrawn at each change.
+1. Set the `HandStyle` default (0 to 18, see `docs/reference/faces.md`) in `src/submarine-24h/resources/properties/properties.xml`. The simulator's settings editor asks for a Garmin Connect login, so changing the default is simpler.
+2. Run `scripts/simulate.sh src/submarine-24h` (this rebuilds the face and clears the settings saved by earlier simulator runs).
 3. Set the simulated time to compare how each style looks at different angles (for example 10:10, 3:00, 21:45): the hour hand is short and wide, the minute hand long and thin, so a style can look good on one and poor on the other.
 
 ## Test the day/night ring

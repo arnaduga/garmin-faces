@@ -1,20 +1,24 @@
 <properties>
     <property id="HandsColor" type="number">15263976</property>
     <property id="SecondsColor" type="number">16711680</property>
-    <property id="OddMarkColor" type="number">16733440</property>
+    <property id="OddMarkColor" type="number">14195499</property>
     <property id="StepsColor" type="number">43775</property>
+    <property id="HeartColor" type="number">16724016</property>
+    <property id="StressColor" type="number">16733440</property>
+    <property id="ActiveColor" type="number">16711935</property>
     <property id="BatteryColor" type="number">65280</property>
-    <property id="ShowSeconds" type="boolean">true</property>
+    <property id="ShowSeconds" type="boolean">false</property>
     <property id="ShowDate" type="boolean">true</property>
-    <property id="ShowSteps" type="boolean">true</property>
-    <property id="ShowBattery" type="boolean">true</property>
     <property id="ShowOddNumerals" type="boolean">true</property>
     <property id="MidnightAtTop" type="boolean">true</property>
     <property id="BatteryOrangeBelow" type="number">30</property>
     <property id="BatteryRedBelow" type="number">15</property>
     <property id="DateLanguage" type="number">0</property>
-    <property id="HandStyle" type="number">0</property>
+    <property id="GaugeTop" type="number">1</property>
+    <property id="GaugeRight" type="number">2</property>
+    <property id="GaugeLeft" type="number">4</property>
+    <property id="HandStyle" type="number">12</property>
     <property id="ShowDayNight" type="boolean">true</property>
-    <property id="DayColor" type="number">16776960</property>
-    <property id="NightColor" type="number">1849976</property>
+    <property id="DayColor" type="number">14195499</property>
+    <property id="NightColor" type="number">3158064</property>
 </properties>

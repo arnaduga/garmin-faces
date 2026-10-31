@@ -5,7 +5,7 @@ The Dev Containers extension is proprietary and not available for VSCodium (Open
 ```bash
 scripts/shell.sh                              # interactive shell
 scripts/shell.sh scripts/setup-sdk.sh         # one-off command
-scripts/shell.sh scripts/build.sh src/simple-time
+scripts/shell.sh scripts/build.sh src/submarine-24h
 ```
 
 The repository is mounted at `/workspace`, so files edited in VSCodium are immediately visible in the container.

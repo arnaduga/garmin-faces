@@ -25,6 +25,9 @@ fluxbox >/dev/null 2>&1 &
 x11vnc -display :99 -nopw -forever -quiet >/dev/null 2>&1 &
 websockify --web /usr/share/novnc 6080 localhost:5900 >/dev/null 2>&1 &
 
+# Settings saved by earlier simulator runs override the defaults of properties.xml: drop them.
+find "$HOME/.Garmin" /tmp/com.garmin.connectiq -iname '*.SET' -delete 2>/dev/null || true
+
 connectiq &
 sleep 5
 echo "Open http://localhost:6080/vnc.html and click Connect. Ctrl+C to stop."

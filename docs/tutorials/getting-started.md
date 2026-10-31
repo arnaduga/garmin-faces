@@ -17,14 +17,14 @@ In this tutorial you set up the environment and compile a face for the Vivoactiv
    scripts/setup-sdk.sh
    ```
 
-   Follow the login prompt. The script installs the SDK, downloads the `vivoactive6` device files and generates a developer key in `.keys/`.
+   Follow the login prompt. The script installs the SDK, downloads the device files of every device listed in the `manifest.xml` files under `src/`, and generates a developer key in `.keys/`.
 3. Put the SDK on your `PATH`:
 
    ```bash
    export PATH="$(connect-iq-sdk-manager sdk current-path --bin):$PATH"
    monkeyc -v
    ```
-4. A first face, `simple-time`, is already in `src/simple-time/`. To start another one, copy it and give the copy a new app `id` in its `manifest.xml`.
+4. A first face, `submarine-24h`, is already in `src/submarine-24h/`. To start another one, copy it and give the copy a new app `id` in its `manifest.xml`.
 5. Build it:
 
    ```bash
