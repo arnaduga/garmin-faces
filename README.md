@@ -32,3 +32,7 @@ docs/            Diátaxis documentation
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md).
+
+## License
+
+[MIT](LICENSE). The software is provided "as is", without warranty of any kind.
