@@ -1,6 +1,6 @@
 # Getting started
 
-In this tutorial you set up the environment and compile a face for the Vivoactive 6.
+In this tutorial you set up the environment and compile a face (the examples use the Vivoactive 6, the default device).
 
 ## Prerequisites
 

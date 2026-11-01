@@ -1,6 +1,6 @@
 # garmin-faces
 
-Watch faces for the **Garmin Vivoactive 6**, written in Monkey C with the Connect IQ SDK.
+Watch faces for round AMOLED **Garmin watches** (vívoactive 5 and 6, Venu, Forerunner, fēnix, epix, MARQ and more; see [docs/reference/faces.md](docs/reference/faces.md)), written in Monkey C with the Connect IQ SDK.
 Everything runs in a devcontainer so nothing but Docker is installed on the host.
 
 ## Quick start

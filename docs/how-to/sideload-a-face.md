@@ -3,7 +3,7 @@
 Install a face directly over USB, without the Connect IQ Store (for example before a store beta).
 
 1. Build the face: `scripts/build.sh src/<face-name>`. The result is `build/<face-name>.prg`, signed with your developer key (`.keys/developer_key.der`), which is enough for a local install.
-2. Connect the Vivoactive 6 to your computer over USB.
+2. Connect the watch to your computer over USB.
 3. Copy `build/<face-name>.prg` to `GARMIN/Apps/` on the watch (the folder may be spelled `GARMIN/APPS/`).
 4. Eject the watch. It takes a few seconds to load the face; then pick it in the watch face picker (long-press the watch face, or the watch face settings of the watch).
 
@@ -11,7 +11,7 @@ Install a face directly over USB, without the Connect IQ Store (for example befo
 
 ## On macOS: the watch is not in the Finder
 
-The Vivoactive 6 appears as an MTP device, not as a disk. Use an MTP transfer app such as OpenMTP or Android File Transfer to copy the file. These are the usual tools for recent Garmin watches; they have not been verified with this model in this project.
+The watch appears as an MTP device, not as a disk. Use an MTP transfer app such as OpenMTP or Android File Transfer to copy the file. These are the usual tools for recent Garmin watches; they have only been tried with the Vivoactive 6 in this project.
 
 ## What to expect
 

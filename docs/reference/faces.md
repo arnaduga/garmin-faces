@@ -3,7 +3,6 @@
 | Face | Directory | Description |
 |---|---|---|
 | Submarine 24h | `src/submarine-24h` | Analog 24-hour dial (one hour-hand turn per day), minute hand, red seconds hand |
-| Submariner 24 | `src/submariner-24` | 24-hour dial over a submarine-hatch background, luminous hands, day/night ring, three round gauges |
 
 ## Submarine 24h
 
@@ -88,16 +87,3 @@ The `Hand style` setting applies to both the hour and the minute hand. Transpare
 ### Day/night ring (Submarine 24h)
 
 The outermost ring shows the day (sunrise to sunset, in the day color) against the night (night color) on the 24 h scale. Sun times come from `Weather.getSunrise`/`getSunset` at the last known position (the `Positioning` permission), remembered in storage; they are recomputed once a day. Without any known position the ring is only the night color.
-
-
-## Submariner 24
-
-A second 24-hour face with a different look: a submarine hatch (plate, bolts, periscope, bronze gear) in the middle, luminous hands and round gauges at the bottom. It has no settings yet.
-
-- Dial: midnight (`00`) at the top, `06` on the right, `12` at the bottom, `18` on the left. Long amber ticks mark the even hours, grey ones the odd hours, short ones the half hours.
-- Hands: luminous hour hand (one turn per day) and minute hand, red seconds hand (high-power mode only).
-- Day/night ring: light blue from sunrise to sunset, black for the night, around the hatch. Same sun-time logic as Submarine 24h (`Positioning` permission).
-- Gauges (bottom): battery on the left (green / orange / red below 30 / 15 %), steps in the middle (steps / daily goal), heart rate on the right (current bpm between today's lowest and highest). Each ring fills clockwise from the top.
-- Name plate: `SUBMARINER 24H`, right of the gear.
-- Low-power mode: only the even-hour ticks, the numerals and the hour/minute hands are drawn.
-- No date is shown.

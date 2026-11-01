@@ -14,7 +14,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `submarine-24h`: 31 more round AMOLED watches (360, 390, 416 and 454 px) are supported, with pen widths and pictograms scaled to the screen width: vívoactive 5, Venu 2S / 2 Plus / 3 / 3S / 4, Forerunner 70 / 165 / 170 / 265 / 570 / 965 / 970, epix (Gen 2) and epix Pro, fēnix 8 / 9 / E, Instinct 3 AMOLED, MARQ (Gen 2) and D2 Air X10.
 - `submarine-24h`: on devices without vector fonts (for example vívoactive 5, Venu 3 and 3S), the numerals and date use the built-in font closest to the intended size and the gauge texts use the smallest one, instead of fixed, larger fonts.
 - `submarine-24h`: stress and active-minutes gauges, with their ring colors in the settings.
-- New face `submariner-24`: 24-hour dial over a submarine-hatch background, luminous hands, day/night ring and battery, steps and heart-rate gauges.
 
 ### Changed
 
@@ -23,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `submarine-24h`: the date text is about 20% larger.
 - `submarine-24h`: hand style 14 (Lume) is removed. Sword, Mercedes, Pearls, Comet and Bubble are renumbered 14 to 18 (they were 15 to 19); a saved Lume style falls back to Sword, and a saved Bubble style to the classic hands.
 - `submarine-24h`: the `Gauge layout`, `Show steps`, `Show heart rate` and `Show battery` settings are replaced by one setting per slot (`Top gauge`, `Right gauge`, `Left gauge`); each can show battery, steps, heart rate, stress, active minutes or nothing. Defaults are unchanged in look (heart top, steps right, battery left). Saved values of the old settings are not carried over.
+
+### Removed
+
+- The `simple-time` test face (`src/simple-time`).
 
 ## [0.1.0] - 2026-10-28
 
